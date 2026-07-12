@@ -1,0 +1,37 @@
+[
+  {
+    "stage": 0,
+    "name": "蛋",
+    "starsRequired": 0,
+    "textureKey": "owl-egg",
+    "description": "一颗微微发光的蛋，里面似乎有什么在动..."
+  },
+  {
+    "stage": 1,
+    "name": "雏鸟",
+    "starsRequired": 10,
+    "textureKey": "owl-chick",
+    "description": "毛绒绒的小家伙，用好奇的大眼睛看着你！"
+  },
+  {
+    "stage": 2,
+    "name": "幼年猫头鹰",
+    "starsRequired": 30,
+    "textureKey": "owl-young",
+    "description": "开始学会拍翅膀了，偶尔能短距离飞行。"
+  },
+  {
+    "stage": 3,
+    "name": "成年猫头鹰",
+    "starsRequired": 60,
+    "textureKey": "owl-adult",
+    "description": "威风凛凛的成年猫头鹰，智慧的眼神充满力量。"
+  },
+  {
+    "stage": 4,
+    "name": "圣鸟",
+    "starsRequired": 100,
+    "textureKey": "owl-sacred",
+    "description": "传说中掌握所有知识之力的圣鸟，周身环绕金色光晕。"
+  }
+]

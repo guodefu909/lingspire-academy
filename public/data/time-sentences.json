@@ -1,0 +1,524 @@
+[
+  {
+    "id": "what-time-is-it",
+    "sentence": "What time is it?",
+    "translation": "现在几点了？",
+    "chunks": ["What time", "is", "it"],
+    "chunkTranslations": ["几点", "是", "它"],
+    "difficulty": 0.15,
+    "distractors": ["are", "they", "on"]
+  },
+  {
+    "id": "it-is-three-oclock",
+    "sentence": "It is three o'clock.",
+    "translation": "现在是三点整。",
+    "chunks": ["It is", "three", "o'clock"],
+    "chunkTranslations": ["它是", "三", "整点"],
+    "difficulty": 0.2,
+    "distractors": ["four", "half past", "quarter"]
+  },
+  {
+    "id": "it-is-half-past-three",
+    "sentence": "It is half past three.",
+    "translation": "现在是三点半。",
+    "chunks": ["It is", "half past", "three"],
+    "chunkTranslations": ["它是", "半过", "三"],
+    "difficulty": 0.35,
+    "distractors": ["quarter past", "quarter to", "four"]
+  },
+  {
+    "id": "it-is-quarter-to-four",
+    "sentence": "It is quarter to four.",
+    "translation": "现在是差一刻四点。",
+    "chunks": ["It is", "quarter to", "four"],
+    "chunkTranslations": ["它是", "差一刻", "四"],
+    "difficulty": 0.5,
+    "distractors": ["quarter past", "half past", "three"]
+  },
+  {
+    "id": "it-is-quarter-past-five",
+    "sentence": "It is quarter past five.",
+    "translation": "现在是五点一刻。",
+    "chunks": ["It is", "quarter past", "five"],
+    "chunkTranslations": ["它是", "过一刻", "五"],
+    "difficulty": 0.45,
+    "distractors": ["quarter to", "half past", "six"]
+  },
+  {
+    "id": "what-time-do-you-get-up",
+    "sentence": "What time do you get up?",
+    "translation": "你几点起床？",
+    "chunks": ["What time", "do you", "get up"],
+    "chunkTranslations": ["几点", "你", "起床"],
+    "difficulty": 0.4,
+    "distractors": ["do they", "go to bed", "have lunch"]
+  },
+  {
+    "id": "i-get-up-at-seven",
+    "sentence": "I get up at seven.",
+    "translation": "我七点起床。",
+    "chunks": ["I", "get up", "at seven"],
+    "chunkTranslations": ["我", "起床", "在七点"],
+    "difficulty": 0.3,
+    "distractors": ["You", "go to bed", "at eight"]
+  },
+  {
+    "id": "what-time-do-you-go-to-bed",
+    "sentence": "What time do you go to bed?",
+    "translation": "你几点睡觉？",
+    "chunks": ["What time", "do you", "go to bed"],
+    "chunkTranslations": ["几点", "你", "睡觉"],
+    "difficulty": 0.4,
+    "distractors": ["do they", "get up", "have lunch"]
+  },
+  {
+    "id": "i-go-to-bed-at-nine",
+    "sentence": "I go to bed at nine.",
+    "translation": "我九点睡觉。",
+    "chunks": ["I", "go to bed", "at nine"],
+    "chunkTranslations": ["我", "睡觉", "在九点"],
+    "difficulty": 0.3,
+    "distractors": ["You", "get up", "at ten"]
+  },
+  {
+    "id": "what-time-do-you-have-lunch",
+    "sentence": "What time do you have lunch?",
+    "translation": "你几点吃午饭？",
+    "chunks": ["What time", "do you", "have lunch"],
+    "chunkTranslations": ["几点", "你", "吃午饭"],
+    "difficulty": 0.45,
+    "distractors": ["do they", "get up", "go home"]
+  },
+  {
+    "id": "i-have-lunch-at-twelve",
+    "sentence": "I have lunch at twelve.",
+    "translation": "我十二点吃午饭。",
+    "chunks": ["I", "have lunch", "at twelve"],
+    "chunkTranslations": ["我", "吃午饭", "在十二点"],
+    "difficulty": 0.35,
+    "distractors": ["You", "get up", "at one"]
+  },
+  {
+    "id": "what-time-do-you-go-home",
+    "sentence": "What time do you go home?",
+    "translation": "你几点回家？",
+    "chunks": ["What time", "do you", "go home"],
+    "chunkTranslations": ["几点", "你", "回家"],
+    "difficulty": 0.4,
+    "distractors": ["do they", "go to school", "have lunch"]
+  },
+  {
+    "id": "i-go-home-at-five",
+    "sentence": "I go home at five.",
+    "translation": "我五点回家。",
+    "chunks": ["I", "go home", "at five"],
+    "chunkTranslations": ["我", "回家", "在五点"],
+    "difficulty": 0.3,
+    "distractors": ["You", "go to school", "at six"]
+  },
+  {
+    "id": "what-time-do-you-have-breakfast",
+    "sentence": "What time do you have breakfast?",
+    "translation": "你几点吃早饭？",
+    "chunks": ["What time", "do you", "have breakfast"],
+    "chunkTranslations": ["几点", "你", "吃早饭"],
+    "difficulty": 0.45,
+    "distractors": ["do they", "have lunch", "go to bed"]
+  },
+  {
+    "id": "i-have-breakfast-at-seven",
+    "sentence": "I have breakfast at seven.",
+    "translation": "我七点吃早饭。",
+    "chunks": ["I", "have breakfast", "at seven"],
+    "chunkTranslations": ["我", "吃早饭", "在七点"],
+    "difficulty": 0.35,
+    "distractors": ["You", "have lunch", "at eight"]
+  },
+  {
+    "id": "what-time-do-you-have-dinner",
+    "sentence": "What time do you have dinner?",
+    "translation": "你几点吃晚饭？",
+    "chunks": ["What time", "do you", "have dinner"],
+    "chunkTranslations": ["几点", "你", "吃晚饭"],
+    "difficulty": 0.45,
+    "distractors": ["do they", "have lunch", "go to bed"]
+  },
+  {
+    "id": "i-have-dinner-at-six",
+    "sentence": "I have dinner at six.",
+    "translation": "我六点吃晚饭。",
+    "chunks": ["I", "have dinner", "at six"],
+    "chunkTranslations": ["我", "吃晚饭", "在六点"],
+    "difficulty": 0.35,
+    "distractors": ["You", "have lunch", "at seven"]
+  },
+  {
+    "id": "what-time-does-school-start",
+    "sentence": "What time does school start?",
+    "translation": "学校几点开始上课？",
+    "chunks": ["What time", "does school", "start"],
+    "chunkTranslations": ["几点", "学校", "开始"],
+    "difficulty": 0.5,
+    "distractors": ["do you", "school start", "end"]
+  },
+  {
+    "id": "school-starts-at-eight",
+    "sentence": "School starts at eight.",
+    "translation": "学校八点开始上课。",
+    "chunks": ["School", "starts", "at eight"],
+    "chunkTranslations": ["学校", "开始", "在八点"],
+    "difficulty": 0.4,
+    "distractors": ["Class", "ends", "at nine"]
+  },
+  {
+    "id": "my-birthday-is-in-september",
+    "sentence": "My birthday is in September.",
+    "translation": "我的生日在九月。",
+    "chunks": ["My birthday", "is", "in September"],
+    "chunkTranslations": ["我的生日", "是", "在九月"],
+    "difficulty": 0.35,
+    "distractors": ["are", "on September", "at September"]
+  },
+  {
+    "id": "her-birthday-is-in-may",
+    "sentence": "Her birthday is in May.",
+    "translation": "她的生日在五月。",
+    "chunks": ["Her birthday", "is", "in May"],
+    "chunkTranslations": ["她的生日", "是", "在五月"],
+    "difficulty": 0.35,
+    "distractors": ["are", "on May", "at May"]
+  },
+  {
+    "id": "his-birthday-is-in-december",
+    "sentence": "His birthday is in December.",
+    "translation": "他的生日在十二月。",
+    "chunks": ["His birthday", "is", "in December"],
+    "chunkTranslations": ["他的生日", "是", "在十二月"],
+    "difficulty": 0.4,
+    "distractors": ["are", "on December", "at December"]
+  },
+  {
+    "id": "i-go-to-school-on-monday",
+    "sentence": "I go to school on Monday.",
+    "translation": "我周一去上学。",
+    "chunks": ["I", "go to school", "on Monday"],
+    "chunkTranslations": ["我", "去上学", "在周一"],
+    "difficulty": 0.4,
+    "distractors": ["You", "go to bed", "at Monday"]
+  },
+  {
+    "id": "i-have-english-class-on-wednesday",
+    "sentence": "I have English class on Wednesday.",
+    "translation": "我周三有英语课。",
+    "chunks": ["I", "have English class", "on Wednesday"],
+    "chunkTranslations": ["我", "上英语课", "在周三"],
+    "difficulty": 0.55,
+    "distractors": ["You", "have math class", "on Friday"]
+  },
+  {
+    "id": "we-have-music-on-friday",
+    "sentence": "We have music on Friday.",
+    "translation": "我们周五有音乐课。",
+    "chunks": ["We", "have music", "on Friday"],
+    "chunkTranslations": ["我们", "上音乐课", "在周五"],
+    "difficulty": 0.45,
+    "distractors": ["They", "have art", "on Monday"]
+  },
+  {
+    "id": "she-goes-to-the-park-on-saturday",
+    "sentence": "She goes to the park on Saturday.",
+    "translation": "她周六去公园。",
+    "chunks": ["She", "goes to the park", "on Saturday"],
+    "chunkTranslations": ["她", "去公园", "在周六"],
+    "difficulty": 0.55,
+    "distractors": ["He", "goes to school", "on Sunday"]
+  },
+  {
+    "id": "he-plays-football-on-sunday",
+    "sentence": "He plays football on Sunday.",
+    "translation": "他周日踢足球。",
+    "chunks": ["He", "plays football", "on Sunday"],
+    "chunkTranslations": ["他", "踢足球", "在周日"],
+    "difficulty": 0.5,
+    "distractors": ["She", "plays basketball", "on Monday"]
+  },
+  {
+    "id": "what-do-you-do-on-saturday",
+    "sentence": "What do you do on Saturday?",
+    "translation": "你周六做什么？",
+    "chunks": ["What", "do you do", "on Saturday"],
+    "chunkTranslations": ["什么", "你做", "在周六"],
+    "difficulty": 0.5,
+    "distractors": ["Where", "do you go", "on Sunday"]
+  },
+  {
+    "id": "i-read-books-on-sunday-morning",
+    "sentence": "I read books on Sunday morning.",
+    "translation": "我周日早上看书。",
+    "chunks": ["I", "read books", "on Sunday morning"],
+    "chunkTranslations": ["我", "看书", "在周日早上"],
+    "difficulty": 0.6,
+    "distractors": ["You", "play games", "on Saturday evening"]
+  },
+  {
+    "id": "we-have-no-class-on-saturday",
+    "sentence": "We have no class on Saturday.",
+    "translation": "我们周六没有课。",
+    "chunks": ["We", "have no class", "on Saturday"],
+    "chunkTranslations": ["我们", "没有课", "在周六"],
+    "difficulty": 0.5,
+    "distractors": ["They", "have class", "on Sunday"]
+  },
+  {
+    "id": "the-meeting-is-at-two-thirty",
+    "sentence": "The meeting is at two thirty.",
+    "translation": "会议在两点半。",
+    "chunks": ["The meeting", "is", "at two thirty"],
+    "chunkTranslations": ["会议", "是", "在两点半"],
+    "difficulty": 0.5,
+    "distractors": ["The class", "are", "at three thirty"]
+  },
+  {
+    "id": "it-is-time-for-school",
+    "sentence": "It is time for school.",
+    "translation": "该上学了。",
+    "chunks": ["It is", "time for", "school"],
+    "chunkTranslations": ["这是", "该", "上学"],
+    "difficulty": 0.3,
+    "distractors": ["They are", "time to", "class"]
+  },
+  {
+    "id": "it-is-time-to-get-up",
+    "sentence": "It is time to get up.",
+    "translation": "该起床了。",
+    "chunks": ["It is", "time to", "get up"],
+    "chunkTranslations": ["这是", "该", "起床"],
+    "difficulty": 0.3,
+    "distractors": ["They are", "time for", "go to bed"]
+  },
+  {
+    "id": "what-day-is-it-today",
+    "sentence": "What day is it today?",
+    "translation": "今天星期几？",
+    "chunks": ["What day", "is it", "today"],
+    "chunkTranslations": ["星期几", "是", "今天"],
+    "difficulty": 0.25,
+    "distractors": ["What time", "are they", "now"]
+  },
+  {
+    "id": "today-is-monday",
+    "sentence": "Today is Monday.",
+    "translation": "今天是星期一。",
+    "chunks": ["Today", "is", "Monday"],
+    "chunkTranslations": ["今天", "是", "星期一"],
+    "difficulty": 0.15,
+    "distractors": ["Yesterday", "are", "Tuesday"]
+  },
+  {
+    "id": "tomorrow-is-friday",
+    "sentence": "Tomorrow is Friday.",
+    "translation": "明天是星期五。",
+    "chunks": ["Tomorrow", "is", "Friday"],
+    "chunkTranslations": ["明天", "是", "星期五"],
+    "difficulty": 0.2,
+    "distractors": ["Yesterday", "are", "Thursday"]
+  },
+  {
+    "id": "yesterday-was-sunday",
+    "sentence": "Yesterday was Sunday.",
+    "translation": "昨天是星期日。",
+    "chunks": ["Yesterday", "was", "Sunday"],
+    "chunkTranslations": ["昨天", "是", "星期日"],
+    "difficulty": 0.3,
+    "distractors": ["Tomorrow", "is", "Monday"]
+  },
+  {
+    "id": "i-have-music-class-on-tuesday",
+    "sentence": "I have music class on Tuesday.",
+    "translation": "我周二有音乐课。",
+    "chunks": ["I", "have music class", "on Tuesday"],
+    "chunkTranslations": ["我", "上音乐课", "在周二"],
+    "difficulty": 0.55,
+    "distractors": ["You", "have art class", "on Thursday"]
+  },
+  {
+    "id": "she-likes-reading-on-weekends",
+    "sentence": "She likes reading on weekends.",
+    "translation": "她喜欢在周末阅读。",
+    "chunks": ["She", "likes reading", "on weekends"],
+    "chunkTranslations": ["她", "喜欢阅读", "在周末"],
+    "difficulty": 0.6,
+    "distractors": ["He", "likes playing", "on weekdays"]
+  },
+  {
+    "id": "we-go-shopping-on-saturday",
+    "sentence": "We go shopping on Saturday.",
+    "translation": "我们周六去购物。",
+    "chunks": ["We", "go shopping", "on Saturday"],
+    "chunkTranslations": ["我们", "去购物", "在周六"],
+    "difficulty": 0.5,
+    "distractors": ["They", "go swimming", "on Sunday"]
+  },
+  {
+    "id": "my-favorite-day-is-friday",
+    "sentence": "My favorite day is Friday.",
+    "translation": "我最喜欢的一天是周五。",
+    "chunks": ["My favorite day", "is", "Friday"],
+    "chunkTranslations": ["我最喜欢的一天", "是", "周五"],
+    "difficulty": 0.4,
+    "distractors": ["are", "on Friday", "at Friday"]
+  },
+  {
+    "id": "january-is-the-first-month",
+    "sentence": "January is the first month.",
+    "translation": "一月是第一个月。",
+    "chunks": ["January", "is", "the first month"],
+    "chunkTranslations": ["一月", "是", "第一个月"],
+    "difficulty": 0.35,
+    "distractors": ["February", "are", "the second month"]
+  },
+  {
+    "id": "december-is-the-last-month",
+    "sentence": "December is the last month.",
+    "translation": "十二月是最后一个月。",
+    "chunks": ["December", "is", "the last month"],
+    "chunkTranslations": ["十二月", "是", "最后一个月"],
+    "difficulty": 0.35,
+    "distractors": ["November", "are", "the first month"]
+  },
+  {
+    "id": "my-birthday-party-is-on-saturday",
+    "sentence": "My birthday party is on Saturday.",
+    "translation": "我的生日派对在周六。",
+    "chunks": ["My birthday party", "is", "on Saturday"],
+    "chunkTranslations": ["我的生日派对", "是", "在周六"],
+    "difficulty": 0.55,
+    "distractors": ["are", "at Saturday", "in Saturday"]
+  },
+  {
+    "id": "the-exam-is-on-thursday",
+    "sentence": "The exam is on Thursday.",
+    "translation": "考试在周四。",
+    "chunks": ["The exam", "is", "on Thursday"],
+    "chunkTranslations": ["考试", "是", "在周四"],
+    "difficulty": 0.45,
+    "distractors": ["are", "at Thursday", "in Thursday"]
+  },
+  {
+    "id": "spring-is-from-march-to-may",
+    "sentence": "Spring is from March to May.",
+    "translation": "春天从三月到五月。",
+    "chunks": ["Spring", "is from", "March to May"],
+    "chunkTranslations": ["春天", "从", "三月到五月"],
+    "difficulty": 0.65,
+    "distractors": ["Summer", "is at", "June to August"]
+  },
+  {
+    "id": "i-was-born-in-july",
+    "sentence": "I was born in July.",
+    "translation": "我出生在七月。",
+    "chunks": ["I", "was born", "in July"],
+    "chunkTranslations": ["我", "出生", "在七月"],
+    "difficulty": 0.45,
+    "distractors": ["You", "was born", "on July"]
+  },
+  {
+    "id": "christmas-is-in-december",
+    "sentence": "Christmas is in December.",
+    "translation": "圣诞节在十二月。",
+    "chunks": ["Christmas", "is", "in December"],
+    "chunkTranslations": ["圣诞节", "是", "在十二月"],
+    "difficulty": 0.4,
+    "distractors": ["are", "on December", "at December"]
+  },
+  {
+    "id": "what-month-comes-after-june",
+    "sentence": "What month comes after June?",
+    "translation": "六月后面是哪个月？",
+    "chunks": ["What month", "comes after", "June"],
+    "chunkTranslations": ["哪个月", "在...之后", "六月"],
+    "difficulty": 0.6,
+    "distractors": ["What day", "comes before", "July"]
+  },
+  {
+    "id": "how-many-days-in-a-week",
+    "sentence": "How many days in a week?",
+    "translation": "一周有多少天？",
+    "chunks": ["How many days", "in", "a week"],
+    "chunkTranslations": ["多少天", "在", "一周"],
+    "difficulty": 0.4,
+    "distractors": ["How much days", "on", "a month"]
+  },
+  {
+    "id": "there-are-seven-days-in-a-week",
+    "sentence": "There are seven days in a week.",
+    "translation": "一周有七天。",
+    "chunks": ["There are", "seven days", "in a week"],
+    "chunkTranslations": ["有", "七天", "在一周"],
+    "difficulty": 0.45,
+    "distractors": ["There is", "seven day", "on a week"]
+  },
+  {
+    "id": "how-many-months-in-a-year",
+    "sentence": "How many months in a year?",
+    "translation": "一年有多少个月？",
+    "chunks": ["How many months", "in", "a year"],
+    "chunkTranslations": ["多少个月", "在", "一年"],
+    "difficulty": 0.45,
+    "distractors": ["How much months", "on", "a year"]
+  },
+  {
+    "id": "there-are-twelve-months-in-a-year",
+    "sentence": "There are twelve months in a year.",
+    "translation": "一年有十二个月。",
+    "chunks": ["There are", "twelve months", "in a year"],
+    "chunkTranslations": ["有", "十二个月", "在一年"],
+    "difficulty": 0.5,
+    "distractors": ["There is", "twelve month", "on a year"]
+  },
+  {
+    "id": "what-time-is-it-now",
+    "sentence": "What time is it now?",
+    "translation": "现在几点了？",
+    "chunks": ["What time", "is it", "now"],
+    "chunkTranslations": ["几点", "是", "现在"],
+    "difficulty": 0.2,
+    "distractors": ["What day", "are they", "here"]
+  },
+  {
+    "id": "it-is-time-for-breakfast",
+    "sentence": "It is time for breakfast.",
+    "translation": "该吃早饭了。",
+    "chunks": ["It is", "time for", "breakfast"],
+    "chunkTranslations": ["这是", "该", "早饭"],
+    "difficulty": 0.3,
+    "distractors": ["They are", "time to", "lunch"]
+  },
+  {
+    "id": "it-is-time-for-bed",
+    "sentence": "It is time for bed.",
+    "translation": "该睡觉了。",
+    "chunks": ["It is", "time for", "bed"],
+    "chunkTranslations": ["这是", "该", "睡觉"],
+    "difficulty": 0.3,
+    "distractors": ["They are", "time to", "school"]
+  },
+  {
+    "id": "the-bus-comes-at-seven-thirty",
+    "sentence": "The bus comes at seven thirty.",
+    "translation": "公交车七点半来。",
+    "chunks": ["The bus", "comes", "at seven thirty"],
+    "chunkTranslations": ["公交车", "来", "在七点半"],
+    "difficulty": 0.55,
+    "distractors": ["The train", "goes", "at eight thirty"]
+  },
+  {
+    "id": "class-begins-at-eight-oclock",
+    "sentence": "Class begins at eight o'clock.",
+    "translation": "八点开始上课。",
+    "chunks": ["Class", "begins", "at eight o'clock"],
+    "chunkTranslations": ["课", "开始", "在八点整"],
+    "difficulty": 0.5,
+    "distractors": ["School", "ends", "at nine o'clock"]
+  }
+]

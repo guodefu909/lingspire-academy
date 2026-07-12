@@ -1,0 +1,6 @@
+.codex/
+.opencode/
+.vscode/
+node_modules/
+游戏化学习会话内容_raw.txt
+游戏化学习会话_raw_data.txt
