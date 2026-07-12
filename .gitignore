@@ -1,7 +1,113 @@
-.git/
+# AI 工具与索引本地数据
 .codex/
 .opencode/
-.vscode/
+
+## Web 前端
 node_modules/
-游戏化学习会话内容_raw.txt
-游戏化学习会话_raw_data.txt
+dist/
+.npm/
+
+## 用户特定文件
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+
+## 构建结果
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Bb]uild/
+*.sbr
+*.obj
+*.pch
+*.res
+*.aps
+*.idb
+*.ilk
+*.ipdb
+*.iobj
+*.exp
+*.tlog
+*.lastbuildstate
+*.rsuser
+*.rsp
+
+## .NET Core / .NET 5+
+project.lock.json
+*.nuget.props
+*.nuget.targets
+
+## NuGet 包
+# 如果你仍使用 packages.config，通常忽略整个 packages/ 文件夹，但保留 repositories.config
+# 下面是常见做法：
+**/[Pp]ackages/*
+!**/[Pp]ackages/repositories.config
+# 若已迁移到 PackageReference，packages 文件夹不再需要，可以直接：
+# packages/
+
+## 发布输出
+[Pp]ublish/
+*.Publish.xml
+*.pubxml
+*.pubxml.user
+*.azurePubxml
+
+## 数据库项目
+*.dbmdl
+*.jfm
+*.dbproj.schemaview
+*.sqfl
+
+## 测试与代码覆盖率
+[Tt]est[Rr]esult*/
+[Cc]ode[Cc]overage/
+*.coverage
+*.coveragexml
+
+## 缓存 / 临时文件
+*.[Cc]ache
+*.log
+*.tmp
+*.bak
+*~
+_ReSharper*/
+*.DotSettings.user
+*.sln.ide/
+
+## C++ IntelliSense 数据库
+*.sdf
+*.opensdf
+*.ncb
+*.VC.opendb
+*.VC.db
+ipch/
+
+## 性能探查器
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+## Visual Studio 扩展生成的文件
+.vscode/  # 如果团队不用 VS Code 统一配置，通常忽略；否则提交 .vscode/settings.json 等
+*.ncrunchsolution
+*.ncrunchproject
+
+## Windows 缩略图缓存
+Thumbs.db
+
+## 其他输出文件
+*.dll
+*.exe
+*.pdb
+*.ilk
+*.lib
+*.exp
+
+# 但保留 packages 目录下的第三方程序集，避免运行时缺失（可选）
+# !**/packages/**/*.dll
+# !**/packages/**/*.pdb
