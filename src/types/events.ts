@@ -1,12 +1,12 @@
 export interface AnswerCorrectEvent {
   knowledgePointId: string;
-  knowledgePointType: 'word' | 'sentence';
+  knowledgePointType: 'word' | 'sentence' | 'math';
   responseTimeMs: number;
 }
 
 export interface AnswerWrongEvent {
   knowledgePointId: string;
-  knowledgePointType: 'word' | 'sentence';
+  knowledgePointType: 'word' | 'sentence' | 'math';
 }
 
 export interface ComboMilestoneEvent {

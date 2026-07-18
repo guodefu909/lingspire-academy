@@ -4,7 +4,7 @@ import { WordDataStore } from './word-data-store';
 
 export class DemonStore {
 
-  async createDemon(knowledgePointId: string, knowledgePointType: 'word' | 'sentence'): Promise<DemonRecord> {
+  async createDemon(knowledgePointId: string, knowledgePointType: 'word' | 'sentence' | 'math'): Promise<DemonRecord> {
     const existing = await db.demonStore
       .where('knowledgePointId')
       .equals(knowledgePointId)

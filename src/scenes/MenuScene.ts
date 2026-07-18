@@ -30,19 +30,40 @@ export class MenuScene extends Phaser.Scene {
       this.scene.start('DifficultySelectScene', { gameMode: 'chunk-build' });
     });
 
-    this.createButton(width / 2, height * 0.52, '听音辨词', () => {
+    this.createButton(width / 2, height * 0.52, '灵算之塔', () => {
+      this.scene.start('CalcDifficultySelectScene');
+    });
+
+    // 拼图进度小图标 — 在灵算之塔按钮右侧
+    const puzzleIconX = width / 2 + 170;
+    const puzzleIconY = height * 0.52;
+    const puzzleBtn = this.add.container(puzzleIconX, puzzleIconY);
+    const puzzleBg = this.add.rectangle(0, 0, 50, 50, 0x1b2838, 0.9)
+      .setStrokeStyle(2, 0xd4a017);
+    const puzzleText = this.add.text(0, 0, '🧩', {
+      fontSize: '24px',
+      fontFamily: 'Arial',
+    }).setOrigin(0.5);
+    puzzleBtn.add([puzzleBg, puzzleText]);
+    puzzleBtn.setSize(50, 50);
+    puzzleBtn.setInteractive({ useHandCursor: true });
+    puzzleBtn.on('pointerdown', () => {
+      this.scene.start('CalcPuzzleMapScene');
+    });
+
+    this.createButton(width / 2, height * 0.62, '听音辨词', () => {
       this.scene.start('DifficultySelectScene', { gameMode: 'listen-pick' });
     });
 
-    this.createButton(width / 2, height * 0.62, '时间配对', () => {
+    this.createButton(width / 2, height * 0.72, '时间配对', () => {
       this.scene.start('DifficultySelectScene', { gameMode: 'time-match' });
     });
 
-    this.createButton(width / 2, height * 0.72, '日常任务', () => {
+    this.createButton(width / 2, height * 0.82, '日常任务', () => {
       this.scene.start('QuestScene');
     });
 
-    this.createButton(width / 2, height * 0.82, '猫头鹰伙伴', () => {
+    this.createButton(width / 2, height * 0.92, '猫头鹰伙伴', () => {
       this.scene.start('OwlProfileScene');
     });
   }

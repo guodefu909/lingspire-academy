@@ -9,6 +9,9 @@ import { TimeMatchScene } from './scenes/TimeMatchScene';
 import { QuestScene } from './scenes/QuestScene';
 import { OwlProfileScene } from './scenes/OwlProfileScene';
 import { ResultScene } from './scenes/ResultScene';
+import { CalcMatchScene } from './scenes/CalcMatchScene';
+import { CalcDifficultySelectScene } from './scenes/CalcDifficultySelectScene';
+import { CalcPuzzleMapScene } from './scenes/CalcPuzzleMapScene';
 import { DemonSystemController } from './systems/demon-controller';
 import { OwlController } from './systems/owl-controller';
 
@@ -22,7 +25,7 @@ const config: Phaser.Types.Core.GameConfig = {
     touch: true,
     activePointers: 3,
   },
-  scene: [BootScene, MenuScene, DifficultySelectScene, ChunkSpellScene, ChunkBuildScene, ListenPickScene, TimeMatchScene, QuestScene, OwlProfileScene, ResultScene],
+  scene: [BootScene, MenuScene, DifficultySelectScene, ChunkSpellScene, ChunkBuildScene, ListenPickScene, TimeMatchScene, QuestScene, OwlProfileScene, ResultScene, CalcDifficultySelectScene, CalcMatchScene, CalcPuzzleMapScene],
 };
 
 const game = new Phaser.Game(config);

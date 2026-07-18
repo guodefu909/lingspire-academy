@@ -1,9 +1,8 @@
 import { db, type WordDataRecord } from './db';
 
-export class WordDataStore {
+export class MathDataStore {
   async recordAnswer(
     knowledgePointId: string,
-    knowledgePointType: 'word' | 'sentence' | 'math',
     correct: boolean,
     responseTimeMs: number
   ): Promise<void> {
@@ -30,7 +29,7 @@ export class WordDataStore {
     } else {
       const record: WordDataRecord = {
         knowledgePointId,
-        knowledgePointType,
+        knowledgePointType: 'math',
         correctCount: correct ? 1 : 0,
         totalCount: 1,
         correctRate: correct ? 1 : 0,
@@ -49,31 +48,11 @@ export class WordDataStore {
     return record?.correctRate ?? null;
   }
 
-  async getAllRecords(): Promise<WordDataRecord[]> {
-    return db.wordDataStore.toArray();
-  }
-
-  async getLeastSeen(count: number, type?: 'word' | 'sentence' | 'math'): Promise<string[]> {
-    let collection = db.wordDataStore.orderBy('lastSeenAt');
-    if (type) {
-      collection = db.wordDataStore.where('knowledgePointType').equals(type);
-    }
-    const records = await collection.limit(count).toArray();
-    return records.map((r) => r.knowledgePointId);
-  }
-
-  private wrongCountMap: Map<string, number> = new Map();
-
-  async incrementWrongCount(knowledgePointId: string): Promise<void> {
-    const current = this.wrongCountMap.get(knowledgePointId) ?? 0;
-    this.wrongCountMap.set(knowledgePointId, current + 1);
-  }
-
-  async getWrongCount(knowledgePointId: string): Promise<number> {
-    return this.wrongCountMap.get(knowledgePointId) ?? 0;
-  }
-
-  async resetWrongCount(knowledgePointId: string): Promise<void> {
-    this.wrongCountMap.delete(knowledgePointId);
+  async getWeakPoints(threshold: number = 0.6): Promise<WordDataRecord[]> {
+    const all = await db.wordDataStore
+      .where('knowledgePointType')
+      .equals('math')
+      .toArray();
+    return all.filter(r => r.correctRate < threshold && r.totalCount >= 3);
   }
 }
