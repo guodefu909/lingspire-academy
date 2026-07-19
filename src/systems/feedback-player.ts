@@ -33,10 +33,26 @@ export class FeedbackPlayer {
 
   speak(text: string): void {
     if (!('speechSynthesis' in window)) return;
+    const synth = window.speechSynthesis;
+    if (synth.speaking) {
+      synth.cancel();
+    }
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'en-US';
     utterance.rate = 0.9;
-    speechSynthesis.speak(utterance);
+    const voices = synth.getVoices();
+    const enVoice = voices.find(v => v.lang.startsWith('en-US'))
+      ?? voices.find(v => v.lang.startsWith('en'));
+    if (enVoice) {
+      utterance.voice = enVoice;
+    }
+    utterance.onend = () => {
+      if (synth.paused) synth.resume();
+    };
+    synth.speak(utterance);
+    setTimeout(() => {
+      if (synth.paused) synth.resume();
+    }, 10);
   }
 
   private playTone(frequency: number, duration: number): void {
