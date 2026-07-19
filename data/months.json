@@ -1,0 +1,162 @@
+[
+  {
+    "id": "january",
+    "word": "January",
+    "phonetic": "/ˈdʒænjueri/",
+    "meaning": "一月",
+    "vowelChunks": [
+      { "index": 1, "value": "a" },
+      { "index": 3, "value": "ua" },
+      { "index": 5, "value": "y" }
+    ],
+    "syllableChunks": ["Jan", "u", "ar", "y"],
+    "difficulty": 0.3,
+    "distractors": ["Jun", "Ju", "er", "i"]
+  },
+  {
+    "id": "february",
+    "word": "February",
+    "phonetic": "/ˈfebrueri/",
+    "meaning": "二月",
+    "vowelChunks": [
+      { "index": 1, "value": "e" },
+      { "index": 3, "value": "ua" },
+      { "index": 5, "value": "y" }
+    ],
+    "syllableChunks": ["Feb", "ru", "ar", "y"],
+    "difficulty": 0.35,
+    "distractors": ["Feb", "ro", "er", "i"]
+  },
+  {
+    "id": "march",
+    "word": "March",
+    "phonetic": "/mɑːrtʃ/",
+    "meaning": "三月",
+    "vowelChunks": [
+      { "index": 1, "value": "a" }
+    ],
+    "syllableChunks": ["March"],
+    "difficulty": 0.1,
+    "distractors": ["Merch", "Monch"]
+  },
+  {
+    "id": "april",
+    "word": "April",
+    "phonetic": "/ˈeɪprəl/",
+    "meaning": "四月",
+    "vowelChunks": [
+      { "index": 1, "value": "A" },
+      { "index": 3, "value": "i" }
+    ],
+    "syllableChunks": ["A", "pril"],
+    "difficulty": 0.2,
+    "distractors": ["E", "prel", "o", "pril"]
+  },
+  {
+    "id": "may",
+    "word": "May",
+    "phonetic": "/meɪ/",
+    "meaning": "五月",
+    "vowelChunks": [
+      { "index": 1, "value": "a" }
+    ],
+    "syllableChunks": ["May"],
+    "difficulty": 0.05,
+    "distractors": ["Mey", "Mai"]
+  },
+  {
+    "id": "june",
+    "word": "June",
+    "phonetic": "/dʒuːn/",
+    "meaning": "六月",
+    "vowelChunks": [
+      { "index": 1, "value": "u" },
+      { "index": 3, "value": "e" }
+    ],
+    "syllableChunks": ["June"],
+    "difficulty": 0.15,
+    "distractors": ["Je", "un", "o", "en"]
+  },
+  {
+    "id": "july",
+    "word": "July",
+    "phonetic": "/dʒuˈlaɪ/",
+    "meaning": "七月",
+    "vowelChunks": [
+      { "index": 1, "value": "u" },
+      { "index": 3, "value": "y" }
+    ],
+    "syllableChunks": ["Ju", "ly"],
+    "difficulty": 0.2,
+    "distractors": ["Jo", "ly", "a", "ley"]
+  },
+  {
+    "id": "august",
+    "word": "August",
+    "phonetic": "/ˈɔːɡəst/",
+    "meaning": "八月",
+    "vowelChunks": [
+      { "index": 1, "value": "Au" },
+      { "index": 3, "value": "u" }
+    ],
+    "syllableChunks": ["Au", "gust"],
+    "difficulty": 0.25,
+    "distractors": ["O", "gust", "E", "gist"]
+  },
+  {
+    "id": "september",
+    "word": "September",
+    "phonetic": "/sɛpˈtɛmbər/",
+    "meaning": "九月",
+    "vowelChunks": [
+      { "index": 1, "value": "e" },
+      { "index": 3, "value": "e" },
+      { "index": 5, "value": "e" }
+    ],
+    "syllableChunks": ["Sep", "tem", "ber"],
+    "difficulty": 0.7,
+    "distractors": ["tim", "bor", "sep", "bir"]
+  },
+  {
+    "id": "october",
+    "word": "October",
+    "phonetic": "/ɒkˈtoʊbər/",
+    "meaning": "十月",
+    "vowelChunks": [
+      { "index": 1, "value": "O" },
+      { "index": 3, "value": "o" },
+      { "index": 5, "value": "e" }
+    ],
+    "syllableChunks": ["Oc", "to", "ber"],
+    "difficulty": 0.6,
+    "distractors": ["to", "bor", "Ac", "be"]
+  },
+  {
+    "id": "november",
+    "word": "November",
+    "phonetic": "/noʊˈvɛmbər/",
+    "meaning": "十一月",
+    "vowelChunks": [
+      { "index": 1, "value": "o" },
+      { "index": 3, "value": "e" },
+      { "index": 5, "value": "e" }
+    ],
+    "syllableChunks": ["No", "vem", "ber"],
+    "difficulty": 0.65,
+    "distractors": ["vem", "bor", "Na", "ber"]
+  },
+  {
+    "id": "december",
+    "word": "December",
+    "phonetic": "/dɪˈsɛmbər/",
+    "meaning": "十二月",
+    "vowelChunks": [
+      { "index": 1, "value": "e" },
+      { "index": 3, "value": "e" },
+      { "index": 5, "value": "e" }
+    ],
+    "syllableChunks": ["De", "cem", "ber"],
+    "difficulty": 0.6,
+    "distractors": ["cem", "bor", "Da", "ber"]
+  }
+]
