@@ -192,7 +192,139 @@ export class CalcMatchUI {
     }
   }
 
-  
+  /** 创建方格区 */
+  createGrid(
+    width: number,
+    puzzle: CalcPuzzle,
+    grid: (number | null)[][],
+    onCellClick: (row: number, col: number) => void,
+    getSelectedCell: () => CellSprite | null
+  ): void {
+    const totalGridWidth = puzzle.gridCols * (CELL_SIZE + CELL_GAP) - CELL_GAP;
+    this.gridOffsetX = (width - totalGridWidth) / 2 + CELL_SIZE / 2;
+    this.gridOffsetY = 420;
+
+    this.cells = [];
+    for (let r = 0; r < puzzle.gridRows; r++) {
+      const row: CellSprite[] = [];
+      for (let c = 0; c < puzzle.gridCols; c++) {
+        const x = this.gridOffsetX + c * (CELL_SIZE + CELL_GAP);
+        const y = this.gridOffsetY + r * (CELL_SIZE + CELL_GAP);
+        const value = grid[r][c];
+
+        const container = this.scene.add.container(x, y);
+
+        const bg = this.scene.add.rectangle(0, 0, CELL_SIZE, CELL_SIZE, 0x1a3050, 0.95)
+          .setStrokeStyle(2, 0x3a5a7a);
+
+        const fontSize = value !== null && value >= 100 ? '20px' : '28px';
+        const text = this.scene.add.text(0, 0, value !== null ? String(value) : '', {
+          fontSize,
+          color: '#d0e0f0',
+          fontFamily: 'Arial',
+          fontStyle: 'bold',
+        }).setOrigin(0.5);
+
+        // 困难模式倒扣遮罩
+        const cover = this.scene.add.rectangle(0, 0, CELL_SIZE, CELL_SIZE, 0x2a1a3a, 0.95)
+          .setStrokeStyle(2, 0x6a4a8a);
+        const coverText = this.scene.add.text(0, 0, '?', {
+          fontSize: '28px',
+          color: '#a080c0',
+          fontFamily: 'Arial',
+          fontStyle: 'bold',
+        }).setOrigin(0.5);
+
+        const isFaceDown = puzzle.faceDown;
+        if (isFaceDown) {
+          cover.setVisible(true);
+          coverText.setVisible(true);
+          text.setVisible(false);
+        } else {
+          cover.setVisible(false);
+          coverText.setVisible(false);
+        }
+
+        container.add([bg, text, cover, coverText]);
+        container.setSize(CELL_SIZE, CELL_SIZE);
+
+        if (value !== null) {
+          container.setInteractive({ useHandCursor: true });
+          container.on('pointerdown', () => onCellClick(r, c));
+          container.on('pointerover', () => {
+            if (grid[r][c] !== null) {
+              const isSelected = getSelectedCell()?.row === r && getSelectedCell()?.col === c;
+              if (!isSelected) bg.setFillStyle(0x2a4a6a, 1);
+            }
+          });
+          container.on('pointerout', () => {
+            const isSelected = getSelectedCell()?.row === r && getSelectedCell()?.col === c;
+            if (isSelected) {
+              bg.setFillStyle(0xd4a017, 1);
+            } else {
+              bg.setFillStyle(0x1a3050, 0.95);
+            }
+          });
+        } else {
+          bg.setFillStyle(0x0d1b2a, 0.3);
+          bg.setStrokeStyle(0);
+          text.setVisible(false);
+          cover.setVisible(false);
+          coverText.setVisible(false);
+        }
+
+        row.push({ container, bg, text, cover, coverText, row: r, col: c, isFlipped: !isFaceDown });
+      }
+      this.cells.push(row);
+    }
+  }
+
+  /** 创建HUD进度文字 */
+  createHUD(width: number, gridRows: number): void {
+    const hudY = this.gridOffsetY + gridRows * (CELL_SIZE + CELL_GAP) + 20;
+
+    this.progressText = this.scene.add.text(width / 2, hudY, '', {
+      fontSize: '18px',
+      color: '#8a9aaa',
+      fontFamily: 'Arial',
+    }).setOrigin(0.5);
+  }
+
+  /** 创建返回按钮 */
+  createBackButton(_width: number, height: number, onBack: () => void): void {
+    const btn = this.scene.add.container(60, height - 50);
+    const bg = this.scene.add.rectangle(0, 0, 110, 46, 0x1b2838, 0.8)
+      .setStrokeStyle(1, 0x3a5a7a);
+    const text = this.scene.add.text(0, 0, '返回', {
+      fontSize: '22px',
+      color: '#8a9aaa',
+      fontFamily: 'Arial',
+    }).setOrigin(0.5);
+    btn.add([bg, text]);
+    btn.setSize(110, 46);
+    btn.setInteractive({ useHandCursor: true });
+    btn.on('pointerdown', onBack);
+  }
+
+  /** 创建燃尽条 */
+  createTimerBar(width: number, gridCols: number): void {
+    const barY = this.gridOffsetY - CELL_SIZE / 2 - 50;  // 方格上方50px
+    const barWidth = gridCols * (CELL_SIZE + CELL_GAP) - CELL_GAP;
+    const barHeight = 8;
+    const barX = (width - barWidth) / 2;
+
+    // 背景
+    this.scene.add.rectangle(
+      width / 2, barY, barWidth, barHeight, 0x1a3050
+    ).setStrokeStyle(1, 0x3a5a7a);
+
+    // 前景（燃尽条）
+    this.timerBar = this.scene.add.rectangle(
+      barX, barY, barWidth, barHeight, 0xd4a017
+    ).setOrigin(0, 0.5);
+  }
+
+  /** 创建个人最佳显示 */
   async createBestTimeDisplay(width: number, levelKey: CalcLevelKey): Promise<void> {
     const progressStore = new CalcProgressStore();
     const progress = await progressStore.getLevelProgress(levelKey);
@@ -204,123 +336,6 @@ export class CalcMatchUI {
         fontFamily: 'Arial',
       }).setOrigin(0.5);
     }
-  }
-
-  /** 创建方格网格 */
-  createGrid(
-    width: number,
-    puzzle: CalcPuzzle,
-    grid: (number | null)[][],
-    onCellClick: (row: number, col: number) => void,
-    _getSelectedCell: () => CellSprite | null
-  ): void {
-    const cols = puzzle.gridCols;
-    const rows = puzzle.gridRows;
-    const totalGridW = cols * (CELL_SIZE + CELL_GAP) - CELL_GAP;
-
-    this.gridOffsetX = (width - totalGridW) / 2 + CELL_SIZE / 2;
-    this.gridOffsetY = 420;
-
-    this.cells = [];
-
-    for (let r = 0; r < rows; r++) {
-      this.cells[r] = [];
-      for (let c = 0; c < cols; c++) {
-        const value = grid[r][c];
-        const x = this.gridOffsetX + c * (CELL_SIZE + CELL_GAP);
-        const y = this.gridOffsetY + r * (CELL_SIZE + CELL_GAP);
-
-        const container = this.scene.add.container(x, y);
-
-        const bg = this.scene.add.rectangle(0, 0, CELL_SIZE, CELL_SIZE, 0x1a3050, 0.95)
-          .setStrokeStyle(2, 0x3a5a7a);
-
-        const text = this.scene.add.text(0, 0, value !== null ? String(value) : '', {
-          fontSize: '26px',
-          color: '#d0e0f0',
-          fontFamily: 'Arial',
-          fontStyle: 'bold',
-        }).setOrigin(0.5);
-
-        const cover = this.scene.add.rectangle(0, 0, CELL_SIZE, CELL_SIZE, 0x2a1a3a, 0.95)
-          .setStrokeStyle(2, 0x6a4a8a);
-
-        const coverText = this.scene.add.text(0, 0, '?', {
-          fontSize: '28px',
-          color: '#a080c0',
-          fontFamily: 'Arial',
-          fontStyle: 'bold',
-        }).setOrigin(0.5);
-
-        const isFlipped = !puzzle.faceDown;
-        cover.setVisible(!isFlipped);
-        coverText.setVisible(!isFlipped);
-        text.setVisible(isFlipped);
-
-        if (value === null) {
-          cover.setVisible(false);
-          coverText.setVisible(false);
-          text.setVisible(false);
-          bg.setFillStyle(0x0d1b2a, 0.3);
-          bg.setStrokeStyle(0);
-        }
-
-        container.add([bg, text, cover, coverText]);
-        container.setSize(CELL_SIZE, CELL_SIZE);
-
-        if (value !== null) {
-          container.setInteractive({ useHandCursor: true });
-          container.on('pointerdown', () => onCellClick(r, c));
-        }
-
-        this.cells[r][c] = {
-          container,
-          bg,
-          text,
-          cover,
-          coverText,
-          row: r,
-          col: c,
-          isFlipped,
-        };
-      }
-    }
-  }
-
-  /** 创建燃尽条 */
-  createTimerBar(width: number, gridCols: number): void {
-    const barWidth = gridCols * (CELL_SIZE + CELL_GAP) - CELL_GAP;
-    const barY = this.gridOffsetY - CELL_SIZE / 2 - 40;
-    this.timerBar = this.scene.add.rectangle(width / 2, barY, barWidth, 6, 0xd4a017)
-      .setOrigin(0.5, 0);
-  }
-
-  /** 创建HUD（进度显示） */
-  createHUD(width: number, gridRows: number): void {
-    const hudY = this.gridOffsetY + gridRows * (CELL_SIZE + CELL_GAP) - CELL_GAP / 2 + 25;
-    this.progressText = this.scene.add.text(width / 2, hudY, '', {
-      fontSize: '16px',
-      color: '#c0a060',
-      fontFamily: 'Arial',
-    }).setOrigin(0.5);
-  }
-
-  /** 创建返回按钮 */
-  createBackButton(_width: number, _height: number, onBack: () => void): void {
-    const btnX = 60;
-    const btnY = 50;
-    const backBtn = this.scene.add.container(btnX, btnY);
-    const btnBg = this.scene.add.rectangle(0, 0, 90, 38, 0x1b2838, 0.9)
-      .setStrokeStyle(1, 0x3a5a7a);
-    const btnText = this.scene.add.text(0, 0, '← 返回', {
-      fontSize: '18px',
-      color: '#8a9aaa',
-      fontFamily: 'Arial',
-    }).setOrigin(0.5);
-    backBtn.add([btnBg, btnText]);
-    backBtn.setSize(90, 38);
-    backBtn.setInteractive({ useHandCursor: true });
-    backBtn.on('pointerdown', onBack);
   }
 
   /** 更新进度文字 */

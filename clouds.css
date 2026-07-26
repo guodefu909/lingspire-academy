@@ -1,0 +1,46 @@
+#clouds {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.cloud {
+  position: absolute;
+  left: -180px;
+  width: 160px;
+  animation: drift linear infinite;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+}
+
+.cloud-vslow { animation-duration: 140s; }
+.cloud-slow  { animation-duration: 110s; }
+.cloud-mid   { animation-duration: 85s;  }
+.cloud-fast  { animation-duration: 60s;  }
+
+@keyframes drift {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(calc(100vw + 320px)); }
+}
+
+/* 初始可见 */
+.c1  { top: 5%;  animation-delay: -20s; }
+.c2  { top: 60%; animation-delay: -55s; }
+.c3  { top: 25%; animation-delay: -10s; }
+.c4  { top: 78%; animation-delay: -35s; }
+.c5  { top: 42%; animation-delay: -70s; }
+.c6  { top: 12%; animation-delay: -45s; }
+
+/* 后续进入 */
+.c7  { top: 8%;  animation-delay: 5s;  }
+.c8  { top: 68%; animation-delay: 12s; }
+.c9  { top: 32%; animation-delay: 20s; }
+.c10 { top: 85%; animation-delay: 28s; }
+.c11 { top: 18%; animation-delay: 38s; }
+.c12 { top: 52%; animation-delay: 45s; }
+.c13 { top: 72%; animation-delay: 55s; }
+.c14 { top: 3%;  animation-delay: 65s; }
+.c15 { top: 48%; animation-delay: 75s; }
+.c16 { top: 35%; animation-delay: 88s; }
