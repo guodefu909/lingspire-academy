@@ -286,7 +286,7 @@ export class MainMenuScene extends Phaser.Scene {
 
   /** 点击"对战游戏" */
   private onBattleGame(): void {
-    window.open("battle.html", "_blank");
+    window.location.href = "battle.html";
   }
 }
 
