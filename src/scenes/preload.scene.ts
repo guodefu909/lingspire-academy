@@ -91,17 +91,17 @@ export class PreloadScene extends Phaser.Scene {
    */
   private loadAssets(): void {
     // ====== 加载关卡数据 ======
-    this.load.json("island-01", "/data/levels/level-01.json");
-    this.load.json("island-02", "/data/levels/level-02.json");
+    this.load.json("island-01", "data/levels/level-01.json");
+    this.load.json("island-02", "data/levels/level-02.json");
 
     // ====== 加载配置数据 ======
-    this.load.json("player-stats", "/data/characters/player-stats.json");
+    this.load.json("player-stats", "data/characters/player-stats.json");
 
     // ====== 角色精灵图 ======
     // idle: 5行1列(下/左下/左/左上/上)，每帧256x256
     this.load.spritesheet(
       "player-idle",
-      "/characters/player-idle2.png",
+      "characters/player-idle2.png",
       {
         frameWidth: 256,
         frameHeight: 256,
@@ -110,7 +110,7 @@ export class PreloadScene extends Phaser.Scene {
     // walk: 5行8列(下/左下/左/左上/上)，每帧256x256
     this.load.spritesheet(
       "player-walk",
-      "/characters/player-walk2.png",
+      "characters/player-walk2.png",
       {
         frameWidth: 256,
         frameHeight: 256,
@@ -118,7 +118,7 @@ export class PreloadScene extends Phaser.Scene {
     );
 
     // ====== 地图背景 ======
-    this.load.image("map-bg", "/map1.jpg");
+    this.load.image("map-bg", "map1.jpg");
   }
 
   create(): void {

@@ -4,9 +4,7 @@
   "description": "灵境 - 教育冒险RPG网页游戏",
   "scripts": {
     "dev": "vite",
-    "dev:battle": "vite battle.html --config vite.config.battle.ts",
     "build": "vite build",
-    "build:battle": "vite build --config vite.config.battle.ts",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },

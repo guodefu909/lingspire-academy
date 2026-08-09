@@ -32,9 +32,9 @@ export class BattleBootScene extends Phaser.Scene {
       this.load.image(`word_img_${w.word}`, url);
     });
 
-    this.load.image("battle-map", "/单词对战地图-1.png");
+    this.load.image("battle-map", "单词对战地图-1.png");
 
-    this.load.spritesheet("soldier-walk", "/soldier-walk.png", {
+    this.load.spritesheet("soldier-walk", "soldier-walk.png", {
       frameWidth: 256,
       frameHeight: 256,
     });

@@ -43,7 +43,7 @@ export const DEFAULT_BATTLE_CONFIG: BattleConfig = {
     finalInterval: 1000,
   },
   word: {
-    imageBaseUrl: "/words/",
+    imageBaseUrl: "words/",
   },
   bullet: {
     speed: 300,

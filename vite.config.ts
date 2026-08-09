@@ -30,6 +30,10 @@ export default defineConfig({
     outDir: "dist",
     sourcemap: true,
     rollupOptions: {
+      input: {
+        main: resolve(__dirname, "index.html"),
+        battle: resolve(__dirname, "battle.html"),
+      },
       output: {
         manualChunks(id: string) {
           if (id.includes("node_modules/phaser")) return "phaser";
