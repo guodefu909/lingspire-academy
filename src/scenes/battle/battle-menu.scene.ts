@@ -86,7 +86,7 @@ export class BattleMenuScene extends Phaser.Scene {
         text: "返回主页面",
         y: 420,
         callback: () => {
-          window.location.href = "../";
+          window.location.href = "./";
         },
       },
     ];
