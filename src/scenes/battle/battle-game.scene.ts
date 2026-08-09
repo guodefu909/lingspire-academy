@@ -12,6 +12,7 @@ export class BattleGameScene extends Phaser.Scene {
   private timeText!: Phaser.GameObjects.Text;
   private pauseButton!: Phaser.GameObjects.Text;
   private discardButton!: Phaser.GameObjects.Text;
+  private fullscreenButton!: Phaser.GameObjects.Text;
   private tooltip!: Phaser.GameObjects.Text;
   private isPaused: boolean = false;
   private crystalHealth: number = 20;
@@ -65,37 +66,27 @@ export class BattleGameScene extends Phaser.Scene {
         backgroundColor: "#2c3e50",
         padding: { x: 8, y: 4 },
       })
-      .setOrigin(0, 0.5);
+      .setOrigin(1, 0.5);
     this.tooltip.setVisible(false);
     this.tooltip.setDepth(100);
 
-    this.discardButton = this.add
-      .text(20, BATTLE_CANVAS_HEIGHT - 40, "换弹", {
+    const rightX = BATTLE_CANVAS_WIDTH - 10;
+
+    this.fullscreenButton = this.add
+      .text(rightX, 30, "全屏", {
         fontSize: "16px",
         color: "#ffffff",
         fontFamily: "Arial",
-        backgroundColor: "#f39c12",
+        backgroundColor: "#3498db",
         padding: { x: 8, y: 4 },
       })
-      .setOrigin(0, 0.5);
+      .setOrigin(1, 0.5);
 
-    this.discardButton.setInteractive({ useHandCursor: true });
-    this.discardButton.on("pointerdown", () => this.discardBullet());
-
-    this.discardButton.on("pointerover", () => {
-      this.tooltip.setPosition(
-        this.discardButton.x + this.discardButton.width + 10,
-        this.discardButton.y,
-      );
-      this.tooltip.setVisible(true);
-    });
-
-    this.discardButton.on("pointerout", () => {
-      this.tooltip.setVisible(false);
-    });
+    this.fullscreenButton.setInteractive({ useHandCursor: true });
+    this.fullscreenButton.on("pointerdown", () => this.toggleFullscreen());
 
     this.pauseButton = this.add
-      .text(BATTLE_CANVAS_WIDTH - 20, 30, "暂停", {
+      .text(rightX, 80, "暂停", {
         fontSize: "16px",
         color: "#ffffff",
         fontFamily: "Arial",
@@ -106,6 +97,31 @@ export class BattleGameScene extends Phaser.Scene {
 
     this.pauseButton.setInteractive({ useHandCursor: true });
     this.pauseButton.on("pointerdown", () => this.togglePause());
+
+    this.discardButton = this.add
+      .text(rightX, 130, "换弹", {
+        fontSize: "16px",
+        color: "#ffffff",
+        fontFamily: "Arial",
+        backgroundColor: "#f39c12",
+        padding: { x: 8, y: 4 },
+      })
+      .setOrigin(1, 0.5);
+
+    this.discardButton.setInteractive({ useHandCursor: true });
+    this.discardButton.on("pointerdown", () => this.discardBullet());
+
+    this.discardButton.on("pointerover", () => {
+      this.tooltip.setPosition(
+        this.discardButton.x - this.discardButton.width - 10,
+        this.discardButton.y,
+      );
+      this.tooltip.setVisible(true);
+    });
+
+    this.discardButton.on("pointerout", () => {
+      this.tooltip.setVisible(false);
+    });
   }
 
   private initBattleManager(): void {
@@ -156,6 +172,16 @@ export class BattleGameScene extends Phaser.Scene {
     } else {
       this.battleManager.resumeGame();
       this.pauseButton.setText("暂停");
+    }
+  }
+
+  private toggleFullscreen(): void {
+    if (!this.scale.isFullscreen) {
+      this.scale.startFullscreen();
+      this.fullscreenButton.setText("退出");
+    } else {
+      this.scale.stopFullscreen();
+      this.fullscreenButton.setText("全屏");
     }
   }
 
