@@ -87,7 +87,6 @@ export class BattleGameManager {
     this.combatSystem.setOnCorrectMatch((bullet, soldier) => {
       if (soldier.getIsPlayerOwned() === false) {
         this.wordLibrary.getStatsManager().recordCorrect(soldier.getWord());
-        this.speakWord(soldier.getWord());
       }
     });
     this.combatSystem.setOnWrongMatch((bullet, soldier) => {
@@ -252,6 +251,7 @@ export class BattleGameManager {
       const isMatch = bullet.checkMatch();
       if (isMatch) {
         target.lock();
+        this.speakWord(bullet.getWord());
       }
       this.flyingBullets.push(bullet);
     }
