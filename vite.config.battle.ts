@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
+  base: "./",
   resolve: {
     alias: {
       "@core": resolve(__dirname, "src/core/"),
@@ -20,15 +21,16 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3000,
+    port: 3001,
     open: true,
     host: true,
     allowedHosts: ["localhost.huawei.com", "localhost"],
   },
   build: {
-    outDir: "dist",
+    outDir: "dist/battle",
     sourcemap: true,
     rollupOptions: {
+      input: resolve(__dirname, "battle.html"),
       output: {
         manualChunks: {
           phaser: ["phaser"],

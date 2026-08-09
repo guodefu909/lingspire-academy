@@ -1,0 +1,87 @@
+{
+  "words": [
+    { "word": "apple", "emoji": "🍎", "category": "fruit", "chinese": "苹果" },
+    { "word": "banana", "emoji": "🍌", "category": "fruit", "chinese": "香蕉" },
+    { "word": "pear", "emoji": "🍐", "category": "fruit", "chinese": "梨" },
+    { "word": "orange", "emoji": "🍊", "category": "fruit", "chinese": "橙子" },
+    { "word": "grape", "emoji": "🍇", "category": "fruit", "chinese": "葡萄" },
+    {
+      "word": "watermelon",
+      "emoji": "🍉",
+      "category": "fruit",
+      "chinese": "西瓜"
+    },
+    {
+      "word": "strawberry",
+      "emoji": "🍓",
+      "category": "fruit",
+      "chinese": "草莓"
+    },
+    { "word": "peach", "emoji": "🍑", "category": "fruit", "chinese": "桃子" },
+    { "word": "lemon", "emoji": "🍋", "category": "fruit", "chinese": "柠檬" },
+    { "word": "cherry", "emoji": "🍒", "category": "fruit", "chinese": "樱桃" },
+
+    { "word": "cat", "emoji": "🐱", "category": "animal", "chinese": "猫" },
+    { "word": "dog", "emoji": "🐕", "category": "animal", "chinese": "狗" },
+    { "word": "bird", "emoji": "🐦", "category": "animal", "chinese": "鸟" },
+    { "word": "fish", "emoji": "🐟", "category": "animal", "chinese": "鱼" },
+    { "word": "pig", "emoji": "🐷", "category": "animal", "chinese": "猪" },
+    { "word": "cow", "emoji": "🐄", "category": "animal", "chinese": "牛" },
+    { "word": "sheep", "emoji": "🐑", "category": "animal", "chinese": "羊" },
+    { "word": "horse", "emoji": "🐴", "category": "animal", "chinese": "马" },
+    {
+      "word": "rabbit",
+      "emoji": "🐰",
+      "category": "animal",
+      "chinese": "兔子"
+    },
+    { "word": "duck", "emoji": "🦆", "category": "animal", "chinese": "鸭子" },
+    { "word": "chicken", "emoji": "🐔", "category": "animal", "chinese": "鸡" },
+    {
+      "word": "monkey",
+      "emoji": "🐵",
+      "category": "animal",
+      "chinese": "猴子"
+    },
+    { "word": "tiger", "emoji": "🐯", "category": "animal", "chinese": "老虎" },
+    { "word": "lion", "emoji": "🦁", "category": "animal", "chinese": "狮子" },
+    {
+      "word": "elephant",
+      "emoji": "🐘",
+      "category": "animal",
+      "chinese": "大象"
+    },
+
+    { "word": "red", "emoji": "🔴", "category": "color", "chinese": "红色" },
+    { "word": "blue", "emoji": "🔵", "category": "color", "chinese": "蓝色" },
+    { "word": "green", "emoji": "🟢", "category": "color", "chinese": "绿色" },
+    { "word": "yellow", "emoji": "🟡", "category": "color", "chinese": "黄色" },
+    { "word": "black", "emoji": "⚫", "category": "color", "chinese": "黑色" },
+    { "word": "white", "emoji": "⚪", "category": "color", "chinese": "白色" },
+    { "word": "pink", "emoji": "🩷", "category": "color", "chinese": "粉色" },
+    { "word": "purple", "emoji": "🟣", "category": "color", "chinese": "紫色" },
+    { "word": "brown", "emoji": "🟤", "category": "color", "chinese": "棕色" },
+
+    { "word": "book", "emoji": "📚", "category": "object", "chinese": "书" },
+    { "word": "pen", "emoji": "🖊️", "category": "object", "chinese": "钢笔" },
+    { "word": "bag", "emoji": "🎒", "category": "object", "chinese": "包" },
+    { "word": "desk", "emoji": "🪑", "category": "object", "chinese": "桌子" },
+    { "word": "chair", "emoji": "🪑", "category": "object", "chinese": "椅子" },
+    { "word": "ball", "emoji": "⚽", "category": "object", "chinese": "球" },
+    { "word": "car", "emoji": "🚗", "category": "object", "chinese": "汽车" },
+    { "word": "bus", "emoji": "🚌", "category": "object", "chinese": "公交车" },
+    {
+      "word": "bike",
+      "emoji": "🚲",
+      "category": "object",
+      "chinese": "自行车"
+    },
+    { "word": "boat", "emoji": "⛵", "category": "object", "chinese": "船" },
+
+    { "word": "bread", "emoji": "🍞", "category": "food", "chinese": "面包" },
+    { "word": "rice", "emoji": "🍚", "category": "food", "chinese": "米饭" },
+    { "word": "egg", "emoji": "🥚", "category": "food", "chinese": "鸡蛋" },
+    { "word": "milk", "emoji": "🥛", "category": "food", "chinese": "牛奶" },
+    { "word": "cake", "emoji": "🍰", "category": "food", "chinese": "蛋糕" }
+  ]
+}

@@ -1,32 +1,22 @@
 {
-  "name": "englishcraft",
-  "version": "1.0.0",
-  "description": "EnglishCraft - 英语学习游戏化平台",
-  "type": "module",
+  "name": "spirit-light",
+  "version": "0.1.0",
+  "description": "灵境 - 教育冒险RPG网页游戏",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "dev:battle": "vite battle.html --config vite.config.battle.ts",
+    "build": "vite build",
+    "build:battle": "vite build --config vite.config.battle.ts",
     "preview": "vite preview",
-    "test": "vitest run"
-  },
-  "keywords": [
-    "education",
-    "game",
-    "english",
-    "phaser",
-    "pwa"
-  ],
-  "author": "",
-  "license": "MIT",
-  "devDependencies": {
-    "lee-spec-kit": "^0.8.8",
-    "typescript": "^7.0.2",
-    "vite": "^8.1.5",
-    "vitest": "^4.1.10"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "dexie": "^4.4.4",
-    "opencode-session-recall": "^0.12.1",
-    "phaser": "^4.0.0"
+    "phaser": "^3.80.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "pngjs": "^7.0.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.4.0"
   }
 }
