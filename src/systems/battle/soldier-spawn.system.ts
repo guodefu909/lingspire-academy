@@ -9,7 +9,7 @@ export class SoldierSpawnSystem {
   private spawnInterval: number;
   private minInterval: number;
   private maxInterval: number;
-  private decreaseRate: number;
+  private gameDuration: number;
   private accumulatedTime: number = 0;
   private lastSpawnTime: number = -6000;
   private wordLibrary: WordLibraryManager;
@@ -21,27 +21,26 @@ export class SoldierSpawnSystem {
     wordLibrary: WordLibraryManager,
     pathManager: PathManager,
     config: BattleConfig,
+    gameDuration: number,
   ) {
     this.scene = scene;
     this.wordLibrary = wordLibrary;
     this.pathManager = pathManager;
     this.maxInterval = config.spawn.initialInterval;
     this.minInterval = config.spawn.finalInterval;
-    this.decreaseRate = config.spawn.decreaseRate;
+    this.gameDuration = gameDuration;
     this.spawnInterval = this.maxInterval;
   }
 
-  calculateSpawnInterval(elapsedMinutes: number): number {
-    const interval =
-      this.maxInterval - elapsedMinutes * this.decreaseRate * 1000;
-    return Math.max(this.minInterval, interval);
+  calculateSpawnInterval(progress: number): number {
+    return this.maxInterval - progress * (this.maxInterval - this.minInterval);
   }
 
   update(time: number, delta: number, crystals: BattleCrystal[]): void {
     this.accumulatedTime += delta;
 
-    const elapsedMinutes = this.accumulatedTime / 60000;
-    this.spawnInterval = this.calculateSpawnInterval(elapsedMinutes);
+    const progress = Math.min(this.accumulatedTime / this.gameDuration, 1);
+    this.spawnInterval = this.calculateSpawnInterval(progress);
 
     if (this.accumulatedTime - this.lastSpawnTime >= this.spawnInterval) {
       this.spawnSoldiers(crystals);

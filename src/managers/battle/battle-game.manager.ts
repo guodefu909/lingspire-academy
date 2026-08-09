@@ -62,6 +62,7 @@ export class BattleGameManager {
       this.wordLibrary,
       this.pathManager,
       this.config,
+      this.config.game.duration,
     );
 
     this.soldierMovementSystem = new SoldierMovementSystem(this.pathManager);

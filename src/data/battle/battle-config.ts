@@ -11,7 +11,6 @@ export interface BattleConfig {
   spawn: {
     initialInterval: number;
     finalInterval: number;
-    decreaseRate: number;
   };
   bullet: {
     speed: number;
@@ -37,9 +36,8 @@ export const DEFAULT_BATTLE_CONFIG: BattleConfig = {
     speed: 60,
   },
   spawn: {
-    initialInterval: 9000,
-    finalInterval: 3000,
-    decreaseRate: 0.3,
+    initialInterval: 8000,
+    finalInterval: 1000,
   },
   bullet: {
     speed: 300,
