@@ -37,14 +37,11 @@ export class BattleGameScene extends Phaser.Scene {
   }
 
   private createMap(): void {
-    const mapImg = this.add.image(
+    this.add.image(
       BATTLE_CANVAS_WIDTH / 2,
       BATTLE_CANVAS_HEIGHT / 2,
       "battle-map",
-    );
-    const scaleY = BATTLE_CANVAS_HEIGHT / 2048;
-    mapImg.setScale(scaleY);
-    mapImg.setDepth(0);
+    ).setDepth(0);
   }
 
   private createUI(): void {
@@ -70,7 +67,7 @@ export class BattleGameScene extends Phaser.Scene {
     this.tooltip.setVisible(false);
     this.tooltip.setDepth(100);
 
-    const rightX = BATTLE_CANVAS_WIDTH - 10;
+    const rightX = BATTLE_CANVAS_WIDTH - 64;
 
     this.fullscreenButton = this.add
       .text(rightX, 30, "全屏", {

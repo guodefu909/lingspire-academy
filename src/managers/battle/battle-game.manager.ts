@@ -87,6 +87,7 @@ export class BattleGameManager {
     this.combatSystem.setOnCorrectMatch((bullet, soldier) => {
       if (soldier.getIsPlayerOwned() === false) {
         this.wordLibrary.getStatsManager().recordCorrect(soldier.getWord());
+        this.speakWord(soldier.getWord());
       }
     });
     this.combatSystem.setOnWrongMatch((bullet, soldier) => {
@@ -280,5 +281,14 @@ export class BattleGameManager {
 
   getVictorySystem(): VictorySystem {
     return this.victorySystem;
+  }
+
+  private speakWord(word: string): void {
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(word);
+    u.lang = "en-US";
+    u.rate = 0.8;
+    window.speechSynthesis.speak(u);
   }
 }
