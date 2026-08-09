@@ -4,27 +4,32 @@ import { PathManager } from "../../managers/battle/path.manager";
 
 export class BattleSoldier extends Phaser.GameObjects.Container {
   private word: string;
-  private emoji: string;
+  private imageUrl: string;
   private health: number;
   private maxHealth: number;
   private speed: number;
   private pathType: PathType;
   private pathProgress: number;
   private pathManager: PathManager;
+  private sprite: Phaser.GameObjects.Sprite;
   private wordText: Phaser.GameObjects.Text;
   private healthBar: Phaser.GameObjects.Graphics;
-  private background: Phaser.GameObjects.Graphics;
   private isPlayerOwned: boolean;
   private hasStartedMoving: boolean = false;
   private fadeInProgress: number = 0;
   private invisibleDuration: number = 700;
   private fadeInDuration: number = 300;
   private locked: boolean = false;
+  private prevX: number = 0;
+  private prevY: number = 0;
+  private frameIndex: number = 0;
+  private frameTimer: number = 0;
+  private animBaseFrame: number = 32;
 
   constructor(
     scene: Phaser.Scene,
     word: string,
-    emoji: string,
+    imageUrl: string,
     pathType: PathType,
     pathManager: PathManager,
     maxHealth: number = 5,
@@ -34,16 +39,12 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
     super(scene, 0, 0);
 
     this.word = word;
-    this.emoji = emoji;
+    this.imageUrl = imageUrl;
     this.pathType = pathType;
     this.pathManager = pathManager;
     this.maxHealth = maxHealth;
     this.health = 1;
 
-    // 根据路径类型调整速度，使各路到达时间相同
-    // 上路和下路长度：640 + 640 = 1280
-    // 中路长度：sqrt(320^2 + 320^2) * 2 ≈ 905
-    // 中路速度 = 基础速度 * 905 / 1280 ≈ 0.707
     if (pathType === PathType.MIDDLE) {
       this.speed = speed * 0.707;
     } else {
@@ -52,116 +53,140 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
 
     this.isPlayerOwned = isPlayerOwned;
     this.hasStartedMoving = false;
-
     this.pathProgress = this.isPlayerOwned ? 0 : 1;
 
     this.setAlpha(0);
-
-    // 敌方士兵在上层，玩家士兵在下层
     this.setDepth(this.isPlayerOwned ? 1 : 2);
 
-    this.background = scene.add.graphics();
-    this.wordText = scene.add
-      .text(0, 0, word, {
-        fontSize: "18px",
-        color: "#ffffff",
-        fontFamily: "Arial",
-        backgroundColor: "#333333",
-        padding: { x: 8, y: 4 },
-      })
-      .setOrigin(0.5);
+    this.sprite = scene.add.sprite(0, 0, "soldier-walk", 32);
+    this.sprite.setScale(0.25);
 
     this.healthBar = scene.add.graphics();
 
-    this.add([this.background, this.wordText, this.healthBar]);
+    this.wordText = scene.add
+      .text(0, 0, word, {
+        fontSize: "13px",
+        color: "#ffffff",
+        fontFamily: "Arial",
+        backgroundColor: "#33333388",
+        padding: { x: 3, y: 1 },
+      })
+      .setOrigin(0.5);
 
-    this.drawBackground();
+    if (this.isPlayerOwned) {
+      this.sprite.setTint(0xccddff);
+    } else {
+      this.sprite.setTint(0xffcccc);
+    }
+
+    this.add([this.sprite, this.wordText, this.healthBar]);
+
     this.updateHealthBar();
 
-    // 根据所属方设置初始位置
     if (this.isPlayerOwned) {
       const startPos = pathManager.getPositionOnPath(pathType, 0);
       this.setPosition(startPos.x, startPos.y);
+      this.prevX = startPos.x;
+      this.prevY = startPos.y;
     } else {
       const startPos = pathManager.getPositionOnPath(pathType, 1);
       this.setPosition(startPos.x, startPos.y);
+      this.prevX = startPos.x;
+      this.prevY = startPos.y;
     }
 
     this.setInteractive(
-      new Phaser.Geom.Rectangle(-30, -30, 60, 60),
+      new Phaser.Geom.Rectangle(-30, -35, 60, 70),
       Phaser.Geom.Rectangle.Contains,
     );
 
     scene.add.existing(this);
   }
 
-  private drawBackground(): void {
-    this.background.clear();
+  private updateDirectionAnimation(dx: number, dy: number): void {
+    if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) return;
 
-    // 根据所属方使用不同颜色
-    const bgColor = this.isPlayerOwned ? 0x4a90e2 : 0xe24a4a;
+    const a = (Math.atan2(dy, dx) * 180) / Math.PI;
 
-    this.background.fillStyle(bgColor, 0.8);
-    this.background.fillRoundedRect(-30, -25, 60, 50, 8);
-    this.background.lineStyle(2, 0xffffff, 0.6);
-    this.background.strokeRoundedRect(-30, -25, 60, 50, 8);
+    if (a > 157.5 || a < -157.5) {
+      this.sprite.setFlipX(false);
+      this.animBaseFrame = 16;
+    } else if (a >= 112.5) {
+      this.sprite.setFlipX(false);
+      this.animBaseFrame = 8;
+    } else if (a > 67.5) {
+      this.sprite.setFlipX(false);
+      this.animBaseFrame = 0;
+    } else if (a > 22.5) {
+      this.sprite.setFlipX(false);
+      this.animBaseFrame = 0;
+    } else if (a >= -22.5) {
+      this.sprite.setFlipX(true);
+      this.animBaseFrame = 16;
+    } else if (a >= -67.5) {
+      this.sprite.setFlipX(true);
+      this.animBaseFrame = 24;
+    } else if (a >= -112.5) {
+      this.sprite.setFlipX(false);
+      this.animBaseFrame = 32;
+    } else if (a >= -157.5) {
+      this.sprite.setFlipX(false);
+      this.animBaseFrame = 32;
+    } else {
+      this.sprite.setFlipX(false);
+      this.animBaseFrame = 16;
+    }
   }
 
   private updateHealthBar(): void {
     this.healthBar.clear();
 
-    const barWidth = 50;
-    const barHeight = 4;
-    const healthPercent = this.health / this.maxHealth;
+    const blockW = 16;
+    const blockH = 5;
+    const gap = 2;
+    const count = this.health;
+    if (count <= 0) return;
 
-    this.healthBar.fillStyle(0x333333, 1);
-    this.healthBar.fillRect(-barWidth / 2, 20, barWidth, barHeight);
+    const totalW = count * blockW + (count - 1) * gap;
+    const barY = -36;
 
-    const healthColor =
-      healthPercent > 0.5
-        ? 0x4caf50
-        : healthPercent > 0.25
-          ? 0xffc107
-          : 0xf44336;
-    this.healthBar.fillStyle(healthColor, 1);
-    this.healthBar.fillRect(
-      -barWidth / 2,
-      20,
-      barWidth * healthPercent,
-      barHeight,
-    );
+    for (let i = 0; i < count; i++) {
+      const x = -totalW / 2 + i * (blockW + gap);
+      this.healthBar.fillStyle(0xe74c3c, 1);
+      this.healthBar.fillRect(x, barY - blockH / 2, blockW, blockH);
+    }
   }
 
   move(delta: number): void {
-    // 淡入效果
     if (this.fadeInProgress < this.invisibleDuration + this.fadeInDuration) {
       this.fadeInProgress += delta;
 
       if (this.fadeInProgress < this.invisibleDuration) {
-        // 完全不显示阶段
         this.setAlpha(0);
       } else {
-        // 淡入阶段
         const fadeInTime = this.fadeInProgress - this.invisibleDuration;
         const alpha = Math.min(1, fadeInTime / this.fadeInDuration);
         this.setAlpha(alpha);
       }
     }
 
+    this.frameTimer += delta;
+    if (this.frameTimer >= 100) {
+      this.frameTimer = 0;
+      this.frameIndex = (this.frameIndex + 1) % 8;
+      this.sprite.setFrame(this.animBaseFrame + this.frameIndex);
+    }
+
     const pathLength = this.pathManager.getPathLength(this.pathType);
     const progressDelta = (this.speed * delta) / 1000 / pathLength;
 
-    // 标记已经开始移动
     if (!this.hasStartedMoving) {
       this.hasStartedMoving = true;
     }
 
-    // 根据所属方决定移动方向
     if (this.isPlayerOwned) {
-      // 玩家士兵向终点移动（从左下到右上）
       this.pathProgress = Math.min(1, this.pathProgress + progressDelta);
     } else {
-      // 敌方士兵向起点移动（从右上到左下，反向）
       this.pathProgress = Math.max(0, this.pathProgress - progressDelta);
     }
 
@@ -170,19 +195,25 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
       this.pathProgress,
     );
     this.setPosition(newPos.x, newPos.y);
+
+    const dx = newPos.x - this.prevX;
+    const dy = newPos.y - this.prevY;
+    this.prevX = newPos.x;
+    this.prevY = newPos.y;
+
+    if (this.fadeInProgress >= this.invisibleDuration + this.fadeInDuration) {
+      this.updateDirectionAnimation(dx, dy);
+    }
   }
 
   hasReachedEnd(): boolean {
-    // 只有开始移动后才检测碰撞
     if (!this.hasStartedMoving) {
       return false;
     }
 
     if (this.isPlayerOwned) {
-      // 玩家士兵到达右上角
       return this.pathProgress >= 1;
     } else {
-      // 敌方士兵到达左下角
       return this.pathProgress <= 0;
     }
   }
@@ -216,8 +247,8 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
     return this.word;
   }
 
-  getEmoji(): string {
-    return this.emoji;
+  getImageUrl(): string {
+    return this.imageUrl;
   }
 
   getPathProgress(): number {

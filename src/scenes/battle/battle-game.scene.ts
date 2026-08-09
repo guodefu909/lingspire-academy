@@ -3,16 +3,12 @@ import { BattleGameManager } from "../../managers/battle/battle-game.manager";
 import { BattleSoldier } from "../../entities/battle/battle-soldier";
 import {
   VictoryResult,
-  BATTLE_MAP_SIZE,
-  BATTLE_MAP_OFFSET_X,
-  BATTLE_MAP_OFFSET_Y,
   BATTLE_CANVAS_WIDTH,
   BATTLE_CANVAS_HEIGHT,
 } from "@config/battle-constants";
 
 export class BattleGameScene extends Phaser.Scene {
   private battleManager!: BattleGameManager;
-  private mapGraphics!: Phaser.GameObjects.Graphics;
   private timeText!: Phaser.GameObjects.Text;
   private pauseButton!: Phaser.GameObjects.Text;
   private discardButton!: Phaser.GameObjects.Text;
@@ -40,76 +36,14 @@ export class BattleGameScene extends Phaser.Scene {
   }
 
   private createMap(): void {
-    this.mapGraphics = this.add.graphics();
-
-    this.mapGraphics.fillStyle(0x2c3e50, 1);
-    this.mapGraphics.fillRect(0, 0, BATTLE_CANVAS_WIDTH, BATTLE_CANVAS_HEIGHT);
-
-    this.mapGraphics.fillStyle(0x34495e, 1);
-    this.mapGraphics.fillRect(
-      BATTLE_MAP_OFFSET_X,
-      BATTLE_MAP_OFFSET_Y,
-      BATTLE_MAP_SIZE,
-      BATTLE_MAP_SIZE,
+    const mapImg = this.add.image(
+      BATTLE_CANVAS_WIDTH / 2,
+      BATTLE_CANVAS_HEIGHT / 2,
+      "battle-map",
     );
-
-    this.mapGraphics.lineStyle(2, 0x5d6d7e, 1);
-    this.mapGraphics.strokeRect(
-      BATTLE_MAP_OFFSET_X,
-      BATTLE_MAP_OFFSET_Y,
-      BATTLE_MAP_SIZE,
-      BATTLE_MAP_SIZE,
-    );
-
-    this.drawPaths();
-  }
-
-  private drawPaths(): void {
-    const pathColor = 0x5d6d7e;
-
-    this.mapGraphics.lineStyle(4, pathColor, 0.6);
-
-    this.mapGraphics.beginPath();
-    this.mapGraphics.moveTo(
-      BATTLE_MAP_OFFSET_X + 80,
-      BATTLE_MAP_OFFSET_Y + 720,
-    );
-    this.mapGraphics.lineTo(BATTLE_MAP_OFFSET_X + 80, BATTLE_MAP_OFFSET_Y + 80);
-    this.mapGraphics.lineTo(
-      BATTLE_MAP_OFFSET_X + 720,
-      BATTLE_MAP_OFFSET_Y + 80,
-    );
-    this.mapGraphics.strokePath();
-
-    this.mapGraphics.beginPath();
-    this.mapGraphics.moveTo(
-      BATTLE_MAP_OFFSET_X + 80,
-      BATTLE_MAP_OFFSET_Y + 720,
-    );
-    this.mapGraphics.lineTo(
-      BATTLE_MAP_OFFSET_X + 400,
-      BATTLE_MAP_OFFSET_Y + 400,
-    );
-    this.mapGraphics.lineTo(
-      BATTLE_MAP_OFFSET_X + 720,
-      BATTLE_MAP_OFFSET_Y + 80,
-    );
-    this.mapGraphics.strokePath();
-
-    this.mapGraphics.beginPath();
-    this.mapGraphics.moveTo(
-      BATTLE_MAP_OFFSET_X + 80,
-      BATTLE_MAP_OFFSET_Y + 720,
-    );
-    this.mapGraphics.lineTo(
-      BATTLE_MAP_OFFSET_X + 720,
-      BATTLE_MAP_OFFSET_Y + 720,
-    );
-    this.mapGraphics.lineTo(
-      BATTLE_MAP_OFFSET_X + 720,
-      BATTLE_MAP_OFFSET_Y + 80,
-    );
-    this.mapGraphics.strokePath();
+    const scaleY = BATTLE_CANVAS_HEIGHT / 2048;
+    mapImg.setScale(scaleY);
+    mapImg.setDepth(0);
   }
 
   private createUI(): void {

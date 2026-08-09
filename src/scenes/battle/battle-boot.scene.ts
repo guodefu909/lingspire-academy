@@ -3,6 +3,8 @@ import {
   BATTLE_CANVAS_WIDTH,
   BATTLE_CANVAS_HEIGHT,
 } from "@config/battle-constants";
+import { DEFAULT_BATTLE_CONFIG } from "../../data/battle/battle-config";
+import wordLibraryData from "../../data/battle/word-library.json";
 
 export class BattleBootScene extends Phaser.Scene {
   private loadingText!: Phaser.GameObjects.Text;
@@ -22,6 +24,20 @@ export class BattleBootScene extends Phaser.Scene {
     this.load.on("complete", () => {
       this.loadingText.setText("加载完成！");
     });
+
+    const imageBaseUrl = DEFAULT_BATTLE_CONFIG.word.imageBaseUrl;
+
+    wordLibraryData.words.forEach((w) => {
+      const url = w.imageUrl.replace("{base}", imageBaseUrl);
+      this.load.image(`word_img_${w.word}`, url);
+    });
+
+    this.load.image("battle-map", "/单词对战地图-1.png");
+
+    this.load.spritesheet("soldier-walk", "/soldier-walk.png", {
+      frameWidth: 256,
+      frameHeight: 256,
+    });
   }
 
   private createLoadingUI(): void {
@@ -29,9 +45,7 @@ export class BattleBootScene extends Phaser.Scene {
     const centerY = BATTLE_CANVAS_HEIGHT / 2;
 
     this.add.rectangle(centerX, centerY, 400, 20, 0x34495e);
-
     this.progressBar = this.add.graphics();
-
     this.loadingText = this.add
       .text(centerX, centerY + 50, "加载中...", {
         fontSize: "24px",
@@ -40,7 +54,7 @@ export class BattleBootScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    const titleText = this.add
+    this.add
       .text(centerX, centerY - 100, "英语单词对战游戏", {
         fontSize: "36px",
         color: "#ffffff",
@@ -64,7 +78,7 @@ export class BattleBootScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.time.delayedCall(500, () => {
+    this.time.delayedCall(300, () => {
       this.scene.start("BattleMenuScene");
     });
   }

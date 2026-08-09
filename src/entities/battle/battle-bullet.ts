@@ -3,47 +3,57 @@ import { BattleSoldier } from "./battle-soldier";
 
 export class BattleBullet extends Phaser.GameObjects.Container {
   private word: string;
-  private emoji: string;
+  private imageUrl: string;
   private target: BattleSoldier | null = null;
   private speed: number;
   private isFlying: boolean = false;
-  private circle: Phaser.GameObjects.Graphics;
-  private emojiText: Phaser.GameObjects.Text;
+  private glow: Phaser.GameObjects.Graphics;
 
   constructor(
     scene: Phaser.Scene,
     word: string,
-    emoji: string,
+    imageUrl: string,
     speed: number = 300,
   ) {
     super(scene, 0, 0);
 
     this.word = word;
-    this.emoji = emoji;
+    this.imageUrl = imageUrl;
     this.speed = speed;
 
-    this.circle = scene.add.graphics();
-    this.emojiText = scene.add
-      .text(0, 0, emoji, {
-        fontSize: "24px",
-      })
-      .setOrigin(0.5);
-
-    this.add([this.circle, this.emojiText]);
-
-    this.drawBullet();
+    this.glow = scene.add.graphics();
+    this.drawGlow();
+    this.add(this.glow);
 
     this.setVisible(false);
-
     scene.add.existing(this);
   }
 
-  private drawBullet(): void {
-    this.circle.clear();
-    this.circle.fillStyle(0x4a90e2, 1);
-    this.circle.fillCircle(0, 0, 20);
-    this.circle.lineStyle(2, 0xffffff, 0.8);
-    this.circle.strokeCircle(0, 0, 20);
+  private drawGlow(): void {
+    this.glow.clear();
+
+    const color = this.getBulletColor();
+
+    this.glow.fillStyle(color, 0.1);
+    this.glow.fillCircle(0, 0, 18);
+
+    this.glow.fillStyle(color, 0.25);
+    this.glow.fillCircle(0, 0, 13);
+
+    this.glow.fillStyle(color, 0.5);
+    this.glow.fillCircle(0, 0, 8);
+
+    this.glow.fillStyle(0xffffff, 1);
+    this.glow.fillCircle(0, 0, 4);
+  }
+
+  private getBulletColor(): number {
+    const hash = this.word.charCodeAt(0);
+    const colors = [
+      0x4a90e2, 0xe24a4a, 0x2ecc71, 0xf39c12,
+      0x9b59b6, 0x1abc9c, 0xe67e22, 0xe74c3c,
+    ];
+    return colors[hash % colors.length];
   }
 
   launch(target: BattleSoldier): void {
@@ -66,16 +76,17 @@ export class BattleBullet extends Phaser.GameObjects.Container {
       targetPos.y,
     );
 
-    if (distance < 10) {
+    if (distance < 20) {
       this.isFlying = false;
       return true;
     }
 
-    const velocity = targetPos
-      .subtract(currentPos)
-      .normalize()
-      .scale((this.speed * delta) / 1000);
-    this.setPosition(this.x + velocity.x, this.y + velocity.y);
+    const step = (this.speed * delta) / 1000;
+    const dir = targetPos.subtract(currentPos).normalize();
+    this.setPosition(
+      this.x + dir.x * step,
+      this.y + dir.y * step,
+    );
 
     return false;
   }
@@ -95,8 +106,8 @@ export class BattleBullet extends Phaser.GameObjects.Container {
     return this.word;
   }
 
-  getEmoji(): string {
-    return this.emoji;
+  getImageUrl(): string {
+    return this.imageUrl;
   }
 
   getTarget(): BattleSoldier | null {

@@ -52,17 +52,6 @@ export class BattleCrystal extends Phaser.GameObjects.Container {
 
   private drawCrystal(): void {
     this.crystalGraphics.clear();
-
-    const color = this.isPlayer ? 0x4a90e2 : 0xe24a4a;
-
-    this.crystalGraphics.fillStyle(color, 1);
-    this.crystalGraphics.fillCircle(0, 0, 40);
-
-    this.crystalGraphics.fillStyle(0xffffff, 0.3);
-    this.crystalGraphics.fillCircle(-10, -10, 15);
-
-    this.crystalGraphics.lineStyle(3, 0xffffff, 0.8);
-    this.crystalGraphics.strokeCircle(0, 0, 40);
   }
 
   private updateHealthBar(): void {

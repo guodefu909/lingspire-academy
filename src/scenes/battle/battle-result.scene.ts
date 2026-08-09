@@ -109,9 +109,17 @@ export class BattleResultScene extends Phaser.Scene {
     for (let i = 0; i < maxDisplay; i++) {
       const word = wrongWords[i];
       const y = startY + i * lineHeight;
+      const imgKey = `word_img_${word.word}`;
+
+      if (this.textures.exists(imgKey)) {
+        this.add
+          .image(BATTLE_CANVAS_WIDTH / 2 - 100, y, imgKey)
+          .setDisplaySize(30, 30)
+          .setOrigin(0.5);
+      }
 
       this.add
-        .text(BATTLE_CANVAS_WIDTH / 2 - 100, y, `${word.emoji} ${word.word}`, {
+        .text(BATTLE_CANVAS_WIDTH / 2 - 40, y, word.word, {
           fontSize: "20px",
           color: "#ffffff",
           fontFamily: "Arial",
@@ -119,7 +127,7 @@ export class BattleResultScene extends Phaser.Scene {
         .setOrigin(0, 0.5);
 
       this.add
-        .text(BATTLE_CANVAS_WIDTH / 2 + 100, y, word.chinese, {
+        .text(BATTLE_CANVAS_WIDTH / 2 + 60, y, word.chinese, {
           fontSize: "18px",
           color: "#bdc3c7",
           fontFamily: "Arial",

@@ -70,7 +70,7 @@ export class SoldierSpawnSystem {
         const soldier = new BattleSoldier(
           this.scene,
           wordData.word,
-          wordData.emoji,
+          wordData.imageUrl,
           pathType,
           this.pathManager,
           undefined,

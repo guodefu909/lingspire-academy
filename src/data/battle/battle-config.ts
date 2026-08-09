@@ -12,6 +12,9 @@ export interface BattleConfig {
     initialInterval: number;
     finalInterval: number;
   };
+  word: {
+    imageBaseUrl: string;
+  };
   bullet: {
     speed: number;
     maxDisplayCount: number;
@@ -38,6 +41,9 @@ export const DEFAULT_BATTLE_CONFIG: BattleConfig = {
   spawn: {
     initialInterval: 8000,
     finalInterval: 1000,
+  },
+  word: {
+    imageBaseUrl: "/words/",
   },
   bullet: {
     speed: 300,

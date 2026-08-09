@@ -30,8 +30,8 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       output: {
-        manualChunks: {
-          phaser: ["phaser"],
+        manualChunks(id: string) {
+          if (id.includes("node_modules/phaser")) return "phaser";
         },
       },
     },

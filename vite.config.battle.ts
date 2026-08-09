@@ -32,8 +32,8 @@ export default defineConfig({
     rollupOptions: {
       input: resolve(__dirname, "battle.html"),
       output: {
-        manualChunks: {
-          phaser: ["phaser"],
+        manualChunks(id: string) {
+          if (id.includes("node_modules/phaser")) return "phaser";
         },
       },
     },

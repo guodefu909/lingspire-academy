@@ -17,6 +17,10 @@ import {
   BATTLE_MAP_SIZE,
   BATTLE_MAP_OFFSET_X,
   BATTLE_MAP_OFFSET_Y,
+  PLAYER_CRYSTAL_X,
+  PLAYER_CRYSTAL_Y,
+  ENEMY_CRYSTAL_X,
+  ENEMY_CRYSTAL_Y,
 } from "@config/battle-constants";
 
 export class BattleGameManager {
@@ -44,7 +48,7 @@ export class BattleGameManager {
     this.scene = scene;
     this.config = { ...DEFAULT_BATTLE_CONFIG, ...config };
 
-    this.wordLibrary = new WordLibraryManager();
+    this.wordLibrary = new WordLibraryManager(this.config.word.imageBaseUrl);
     this.pathManager = new PathManager(
       BATTLE_MAP_SIZE,
       BATTLE_MAP_OFFSET_X,
@@ -123,16 +127,16 @@ export class BattleGameManager {
   private createCrystals(): void {
     this.playerCrystal = new BattleCrystal(
       this.scene,
-      BATTLE_MAP_OFFSET_X + 80,
-      BATTLE_MAP_OFFSET_Y + 720,
+      PLAYER_CRYSTAL_X,
+      PLAYER_CRYSTAL_Y,
       true,
       this.config.crystal.initialHealth,
     );
 
     this.enemyCrystal = new BattleCrystal(
       this.scene,
-      BATTLE_MAP_OFFSET_X + 720,
-      BATTLE_MAP_OFFSET_Y + 80,
+      ENEMY_CRYSTAL_X,
+      ENEMY_CRYSTAL_Y,
       false,
       this.config.crystal.initialHealth,
     );

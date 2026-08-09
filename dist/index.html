@@ -1,103 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#2a1a3a" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦉</text></svg>" />
-  <meta name="description" content="EnglishCraft - 英语魔法学院，在游戏中学习英语" />
-  <link rel="manifest" href="./manifest.json" />
-  <title>EnglishCraft - 英语魔法学院</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #1a0e2a;
-    }
-    #clouds {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    .cloud {
-      position: absolute;
-      width: 300px;
-      height: 80px;
-      animation: drift linear infinite;
-    }
-    .cloud-slow {
-      animation-duration: 45s;
-      top: 5%;
-    }
-    .cloud-mid {
-      animation-duration: 30s;
-      top: 15%;
-    }
-    .cloud-fast {
-      animation-duration: 20s;
-      top: 10%;
-    }
-    @keyframes drift {
-      0%   { transform: translateX(-120%); }
-      100% { transform: translateX(calc(100vw + 120%)); }
-    }
-    #game {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    #game canvas {
-      max-width: 100%;
-      max-height: 100%;
-    }
-  </style>
-  <script type="module" crossorigin src="./assets/index-B5WkVF-P.js"></script>
-</head>
-
-<body>
-  <div id="clouds">
-    <div class="cloud cloud-slow" style="left:-30%;width:400px;height:70px;
-      background:radial-gradient(ellipse 35% 50% at 20% 50%,rgba(255,255,255,.12) 0%,transparent 70%),
-                 radial-gradient(ellipse 40% 55% at 45% 40%,rgba(210,220,245,.10) 0%,transparent 65%),
-                 radial-gradient(ellipse 30% 45% at 70% 55%,rgba(255,255,255,.08) 0%,transparent 70%),
-                 radial-gradient(ellipse 25% 35% at 85% 50%,rgba(230,235,255,.06) 0%,transparent 65%)">
-    </div>
-    <div class="cloud cloud-mid" style="left:-60%;width:500px;height:90px;
-      background:radial-gradient(ellipse 30% 55% at 15% 45%,rgba(255,255,255,.15) 0%,transparent 70%),
-                 radial-gradient(ellipse 45% 60% at 40% 35%,rgba(200,210,240,.12) 0%,transparent 60%),
-                 radial-gradient(ellipse 35% 50% at 65% 50%,rgba(255,255,255,.09) 0%,transparent 70%),
-                 radial-gradient(ellipse 28% 40% at 80% 45%,rgba(220,225,245,.07) 0%,transparent 65%)">
-    </div>
-    <div class="cloud cloud-fast" style="left:-40%;width:350px;height:60px;
-      background:radial-gradient(ellipse 40% 50% at 25% 50%,rgba(255,255,255,.10) 0%,transparent 70%),
-                 radial-gradient(ellipse 35% 50% at 55% 45%,rgba(230,235,250,.08) 0%,transparent 68%),
-                 radial-gradient(ellipse 30% 40% at 75% 50%,rgba(200,210,230,.06) 0%,transparent 70%)">
-    </div>
-    <div class="cloud cloud-slow" style="left:-80%;width:450px;height:80px;
-      background:radial-gradient(ellipse 35% 55% at 20% 45%,rgba(255,255,255,.11) 0%,transparent 70%),
-                 radial-gradient(ellipse 40% 60% at 50% 38%,rgba(210,215,240,.09) 0%,transparent 62%),
-                 radial-gradient(ellipse 30% 45% at 75% 52%,rgba(255,255,255,.07) 0%,transparent 68%)">
-    </div>
-    <div class="cloud cloud-mid" style="left:-50%;width:380px;height:65px;
-      background:radial-gradient(ellipse 38% 50% at 18% 48%,rgba(255,255,255,.13) 0%,transparent 68%),
-                 radial-gradient(ellipse 35% 55% at 48% 42%,rgba(220,225,250,.10) 0%,transparent 65%),
-                 radial-gradient(ellipse 32% 45% at 72% 50%,rgba(240,240,255,.08) 0%,transparent 66%)">
-    </div>
-    <div class="cloud cloud-fast" style="left:-20%;width:320px;height:55px;
-      background:radial-gradient(ellipse 45% 50% at 30% 50%,rgba(255,255,255,.09) 0%,transparent 68%),
-                 radial-gradient(ellipse 30% 45% at 60% 45%,rgba(200,210,235,.07) 0%,transparent 70%)">
-    </div>
-  </div>
-  <div id="game"></div>
-</body>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title>灵光 - Spirit Light</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #000;
+      }
+      #game-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-BQ6q3BEC.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/phaser-DP-JOnw2.js">
+  </head>
+  <body>
+    <div id="game-container"></div>
+  </body>
 </html>

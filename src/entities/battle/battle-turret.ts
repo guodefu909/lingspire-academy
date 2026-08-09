@@ -24,7 +24,11 @@ export class BattleTurret extends Phaser.GameObjects.Container {
       return;
     }
 
-    const bullet = new BattleBullet(this.scene, wordData.word, wordData.emoji);
+    const bullet = new BattleBullet(
+      this.scene,
+      wordData.word,
+      wordData.imageUrl,
+    );
 
     this.bullets.push(bullet);
 
@@ -58,7 +62,6 @@ export class BattleTurret extends Phaser.GameObjects.Container {
       return;
     }
 
-    // 只显示第一个炮弹（准备发射的炮弹）
     const bullet = this.bullets[0];
 
     const displayBullet = this.scene.add.container(0, 0);
@@ -69,16 +72,18 @@ export class BattleTurret extends Phaser.GameObjects.Container {
     circle.lineStyle(3, 0xffffff, 0.9);
     circle.strokeCircle(0, 0, 25);
 
-    const emojiText = this.scene.add
-      .text(0, 0, bullet.getEmoji(), {
-        fontSize: "28px",
-      })
-      .setOrigin(0.5);
+    const key = `word_img_${bullet.getWord()}`;
+    let imageObj: Phaser.GameObjects.Image | Phaser.GameObjects.Container;
 
-    displayBullet.add([circle, emojiText]);
+    if (this.scene.textures.exists(key)) {
+      imageObj = this.scene.add.image(0, 0, key).setDisplaySize(44, 44);
+    } else {
+      imageObj = this.createFallbackAvatar(this.scene, bullet.getWord(), 22);
+    }
+
+    displayBullet.add([circle, imageObj]);
     this.bulletContainer.add(displayBullet);
 
-    // 显示炮弹总数
     if (this.bullets.length > 0) {
       const countText = this.scene.add
         .text(0, 50, `炮弹: ${this.bullets.length}`, {
@@ -99,5 +104,34 @@ export class BattleTurret extends Phaser.GameObjects.Container {
 
   hasBullets(): boolean {
     return this.bullets.length > 0;
+  }
+
+  private createFallbackAvatar(
+    scene: Phaser.Scene,
+    word: string,
+    radius: number,
+  ): Phaser.GameObjects.Container {
+    const colors = [0xe74c3c, 0x3498db, 0x2ecc71, 0xf39c12, 0x9b59b6, 0x1abc9c, 0xe67e22, 0x2980b9];
+    const colorIndex = word.charCodeAt(0) % colors.length;
+    const bgColor = colors[colorIndex];
+
+    const container = scene.add.container(0, 0);
+    const gfx = scene.add.graphics();
+    gfx.fillStyle(bgColor, 1);
+    gfx.fillCircle(0, 0, radius);
+    gfx.lineStyle(2, 0xffffff, 0.6);
+    gfx.strokeCircle(0, 0, radius);
+
+    const letter = scene.add
+      .text(0, 0, word.charAt(0).toUpperCase(), {
+        fontSize: `${radius}px`,
+        color: "#ffffff",
+        fontFamily: "Arial",
+        fontStyle: "bold",
+      })
+      .setOrigin(0.5);
+
+    container.add([gfx, letter]);
+    return container;
   }
 }

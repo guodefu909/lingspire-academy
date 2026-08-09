@@ -87,7 +87,7 @@ export class BattleStatsScene extends Phaser.Scene {
           : 0;
 
       this.scrollContainer.add(
-        this.add.text(50, y, stat.word, {
+        this.add.text(BATTLE_CANVAS_WIDTH / 2 - 200, y, stat.word, {
           fontSize: "18px",
           color: "#ffffff",
           fontFamily: "Arial",
@@ -95,7 +95,7 @@ export class BattleStatsScene extends Phaser.Scene {
       );
 
       this.scrollContainer.add(
-        this.add.text(200, y, accuracy + "%", {
+        this.add.text(BATTLE_CANVAS_WIDTH / 2 - 80, y, accuracy + "%", {
           fontSize: "18px",
           color:
             accuracy >= 80 ? "#2ecc71" : accuracy >= 50 ? "#f39c12" : "#e74c3c",
@@ -104,7 +104,7 @@ export class BattleStatsScene extends Phaser.Scene {
       );
 
       this.scrollContainer.add(
-        this.add.text(300, y, "正确: " + stat.correctCount, {
+        this.add.text(BATTLE_CANVAS_WIDTH / 2 + 20, y, "正确: " + stat.correctCount, {
           fontSize: "18px",
           color: "#2ecc71",
           fontFamily: "Arial",
@@ -112,7 +112,7 @@ export class BattleStatsScene extends Phaser.Scene {
       );
 
       this.scrollContainer.add(
-        this.add.text(420, y, "错误: " + stat.wrongCount, {
+        this.add.text(BATTLE_CANVAS_WIDTH / 2 + 140, y, "错误: " + stat.wrongCount, {
           fontSize: "18px",
           color: "#e74c3c",
           fontFamily: "Arial",
