@@ -1,7 +1,12 @@
-import { BattleSoldier } from "../../entities/battle/battle-soldier";
 import { BattleCrystal } from "../../entities/battle/battle-crystal";
+import { BattleSoldier } from "../../entities/battle/battle-soldier";
 import { PathManager } from "../../managers/battle/path.manager";
 
+/**
+ * 士兵移动系统 —— 更新所有士兵沿路径移动并检测抵达终点。
+ *
+ * 抵达敌方水晶时扣血 + 士兵死亡，同时记录错误单词（玩家方漏掉的敌军）。
+ */
 export class SoldierMovementSystem {
   private pathManager: PathManager;
   private onSoldierHitCrystal:
@@ -12,64 +17,43 @@ export class SoldierMovementSystem {
     this.pathManager = pathManager;
   }
 
-  setOnSoldierHitCrystal(
-    callback: (soldier: BattleSoldier, crystal: BattleCrystal) => void,
-  ): void {
-    this.onSoldierHitCrystal = callback;
+  setOnSoldierHitCrystal(cb: (soldier: BattleSoldier, crystal: BattleCrystal) => void): void {
+    this.onSoldierHitCrystal = cb;
   }
 
-  moveSoldier(soldier: BattleSoldier, delta: number): void {
-    soldier.move(delta);
-  }
-
-  checkCrystalCollision(
-    soldier: BattleSoldier,
-    crystal: BattleCrystal,
-  ): boolean {
-    if (!soldier.hasReachedEnd()) {
-      return false;
-    }
-
-    const distance = Phaser.Math.Distance.Between(
-      soldier.x,
-      soldier.y,
-      crystal.x,
-      crystal.y,
-    );
-
-    return distance < 50;
-  }
-
-  handleCrystalCollision(soldier: BattleSoldier, crystal: BattleCrystal): void {
-    if (this.onSoldierHitCrystal) {
-      this.onSoldierHitCrystal(soldier, crystal);
-    }
-
-    const damage = soldier.getHealth();
-    crystal.takeDamage(damage);
-    soldier.destroy();
-  }
-
+  /**
+   * 每帧更新所有士兵位置，抵达终点时扣血并销毁。
+   * @param soldiers 士兵数组（玩家或敌方）
+   * @param ownCrystal 己方水晶（不会判定扣血）
+   * @param targetCrystal 目标水晶（抵达时扣血）
+   */
   update(
     soldiers: BattleSoldier[],
-    playerCrystal: BattleCrystal,
-    enemyCrystal: BattleCrystal,
+    ownCrystal: BattleCrystal,
+    targetCrystal: BattleCrystal,
     delta: number,
   ): void {
-    soldiers.forEach((soldier) => {
-      this.moveSoldier(soldier, delta);
+    for (let i = soldiers.length - 1; i >= 0; i--) {
+      const soldier = soldiers[i];
+
+      if (!soldier.active) {
+        soldiers.splice(i, 1);
+        continue;
+      }
+
+      soldier.move(delta);
 
       if (soldier.hasReachedEnd()) {
-        const targetCrystal = soldier.getData("targetCrystal") as BattleCrystal;
+        // 攻击目标水晶
+        targetCrystal.takeDamage(1);
 
-        if (targetCrystal) {
-          this.handleCrystalCollision(soldier, targetCrystal);
+        if (this.onSoldierHitCrystal) {
+          this.onSoldierHitCrystal(soldier, targetCrystal);
         }
-      }
-    });
 
-    const aliveSoldiers = soldiers.filter((s) => s.active);
-    soldiers.length = 0;
-    soldiers.push(...aliveSoldiers);
+        soldier.destroy();
+        soldiers.splice(i, 1);
+      }
+    }
   }
 }

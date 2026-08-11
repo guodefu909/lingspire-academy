@@ -23,6 +23,12 @@ import {
   ENEMY_CRYSTAL_Y,
 } from "@config/battle-constants";
 
+/**
+ * 战斗游戏核心管理器 —— 统一调度所有战斗子系统的生命周期。
+ *
+ * 负责：创建水晶/士兵/炮弹 → 初始化子系统 → 注册事件监听 →
+ * 每帧驱动更新 → 游戏开始/暂停/结束控制。
+ */
 export class BattleGameManager {
   private scene: Phaser.Scene;
   private config: BattleConfig;
@@ -36,9 +42,13 @@ export class BattleGameManager {
 
   private playerCrystal!: BattleCrystal;
   private enemyCrystal!: BattleCrystal;
+  /** 玩家士兵列表 */
   private playerSoldiers: BattleSoldier[] = [];
+  /** 敌方士兵列表 */
   private enemySoldiers: BattleSoldier[] = [];
+  /** 当前飞行中的炮弹 */
   private flyingBullets: BattleBullet[] = [];
+  /** 本局玩家答错的单词 */
   private wrongWords: WordData[] = [];
 
   private isPaused: boolean = false;
@@ -58,25 +68,22 @@ export class BattleGameManager {
     this.init();
   }
 
+  /**
+   * 初始化：创建水晶 → 创建各子系统 → 注册事件监听。
+   */
   init(): void {
     this.createCrystals();
-
     this.soldierSpawnSystem = new SoldierSpawnSystem(
-      this.scene,
-      this.wordLibrary,
-      this.pathManager,
-      this.config,
+      this.scene, this.wordLibrary, this.pathManager, this.config,
       this.config.game.duration,
     );
 
     this.soldierMovementSystem = new SoldierMovementSystem(this.pathManager);
+    // 敌方士兵抵达玩家水晶 → 记录错误单词
     this.soldierMovementSystem.setOnSoldierHitCrystal((soldier, crystal) => {
       if (!soldier.getIsPlayerOwned() && crystal.getIsPlayer()) {
         const wordData = this.wordLibrary.getWordData(soldier.getWord());
-        if (
-          wordData &&
-          !this.wrongWords.find((w) => w.word === wordData.word)
-        ) {
+        if (wordData && !this.wrongWords.find((w) => w.word === wordData.word)) {
           this.wrongWords.push(wordData);
         }
         this.wordLibrary.getStatsManager().recordWrong(soldier.getWord());
@@ -84,18 +91,17 @@ export class BattleGameManager {
     });
 
     this.combatSystem = new CombatSystem();
+    // 正确命中 → 记录正确
     this.combatSystem.setOnCorrectMatch((bullet, soldier) => {
       if (soldier.getIsPlayerOwned() === false) {
         this.wordLibrary.getStatsManager().recordCorrect(soldier.getWord());
       }
     });
+    // 错误命中 → 记录错误单词
     this.combatSystem.setOnWrongMatch((bullet, soldier) => {
       if (soldier.getIsPlayerOwned() === false) {
         const wordData = this.wordLibrary.getWordData(bullet.getWord());
-        if (
-          wordData &&
-          !this.wrongWords.find((w) => w.word === wordData.word)
-        ) {
+        if (wordData && !this.wrongWords.find((w) => w.word === wordData.word)) {
           this.wrongWords.push(wordData);
         }
         this.wordLibrary.getStatsManager().recordWrong(soldier.getWord());
@@ -103,15 +109,11 @@ export class BattleGameManager {
     });
 
     this.aiSystem = new AISystem(
-      this.enemyCrystal,
-      this.combatSystem,
-      this.config.ai.errorRate,
+      this.enemyCrystal, this.combatSystem, this.config.ai.errorRate,
     );
 
     this.victorySystem = new VictorySystem(
-      this.playerCrystal,
-      this.enemyCrystal,
-      this.config.game.duration,
+      this.playerCrystal, this.enemyCrystal, this.config.game.duration,
     );
 
     this.clearEventListeners();
@@ -124,24 +126,24 @@ export class BattleGameManager {
     this.scene.events.off("crystal-destroyed");
   }
 
+  /** 在地图指定坐标创建玩家和敌方水晶 */
   private createCrystals(): void {
     this.playerCrystal = new BattleCrystal(
-      this.scene,
-      PLAYER_CRYSTAL_X,
-      PLAYER_CRYSTAL_Y,
-      true,
+      this.scene, PLAYER_CRYSTAL_X, PLAYER_CRYSTAL_Y, true,
       this.config.crystal.initialHealth,
     );
-
     this.enemyCrystal = new BattleCrystal(
-      this.scene,
-      ENEMY_CRYSTAL_X,
-      ENEMY_CRYSTAL_Y,
-      false,
+      this.scene, ENEMY_CRYSTAL_X, ENEMY_CRYSTAL_Y, false,
       this.config.crystal.initialHealth,
     );
   }
 
+  /**
+   * 注册三个核心事件：
+   * ① soldier-spawned → 士兵分配到对应水晶，给目标水晶生成炮弹
+   * ② soldier-died → 从列表中移除
+   * ③ crystal-destroyed → 判定游戏结束
+   */
   private setupEventListeners(): void {
     this.scene.events.on("soldier-spawned", (data: any) => {
       const { soldier, crystal, wordData } = data;
@@ -149,101 +151,75 @@ export class BattleGameManager {
       if (crystal.getIsPlayer()) {
         soldier.setData("targetCrystal", this.enemyCrystal);
         this.playerSoldiers.push(soldier);
-        // 玩家士兵出现，给敌方水晶添加炮弹（用于攻击玩家士兵）
+        // 玩家士兵出现 → 给敌方水晶添加炮弹（供玩家攻击用）
         this.enemyCrystal.addBullet(wordData);
       } else {
         soldier.setData("targetCrystal", this.playerCrystal);
         this.enemySoldiers.push(soldier);
-        // 敌方士兵出现，给玩家水晶添加炮弹（用于攻击敌方士兵）
+        // 敌方士兵出现 → 给玩家水晶添加炮弹（供 AI 攻击用）
         this.playerCrystal.addBullet(wordData);
       }
     });
 
     this.scene.events.on("soldier-died", (soldier: BattleSoldier) => {
       const playerIndex = this.playerSoldiers.indexOf(soldier);
-      if (playerIndex > -1) {
-        this.playerSoldiers.splice(playerIndex, 1);
-      }
+      if (playerIndex > -1) this.playerSoldiers.splice(playerIndex, 1);
 
       const enemyIndex = this.enemySoldiers.indexOf(soldier);
-      if (enemyIndex > -1) {
-        this.enemySoldiers.splice(enemyIndex, 1);
-      }
+      if (enemyIndex > -1) this.enemySoldiers.splice(enemyIndex, 1);
     });
 
     this.scene.events.on("crystal-destroyed", (isPlayer: boolean) => {
-      const result = isPlayer
-        ? VictoryResult.ENEMY_WIN
-        : VictoryResult.PLAYER_WIN;
+      const result = isPlayer ? VictoryResult.ENEMY_WIN : VictoryResult.PLAYER_WIN;
       this.endGame(result);
     });
   }
 
+  /**
+   * 每帧主循环：更新时间 → 出兵 → 士兵移动 → 炮弹飞行 → AI →
+   * 胜利判定。暂停或未开始时跳过。
+   */
   update(time: number, delta: number): void {
-    if (this.isPaused || !this.isGameStarted) {
-      return;
-    }
+    if (this.isPaused || !this.isGameStarted) return;
 
     this.victorySystem.updateTime(delta);
 
     this.soldierSpawnSystem.update(time, delta, [
-      this.playerCrystal,
-      this.enemyCrystal,
+      this.playerCrystal, this.enemyCrystal,
     ]);
 
     this.soldierMovementSystem.update(
-      this.playerSoldiers,
-      this.playerCrystal,
-      this.enemyCrystal,
-      delta,
+      this.playerSoldiers, this.playerCrystal, this.enemyCrystal, delta,
     );
-
     this.soldierMovementSystem.update(
-      this.enemySoldiers,
-      this.enemyCrystal,
-      this.playerCrystal,
-      delta,
+      this.enemySoldiers, this.enemyCrystal, this.playerCrystal, delta,
     );
 
     this.combatSystem.update(this.flyingBullets, this.enemySoldiers, delta);
 
     const aiBullet = this.aiSystem.update(time, this.playerSoldiers);
-    if (aiBullet) {
-      this.flyingBullets.push(aiBullet);
-    }
+    if (aiBullet) this.flyingBullets.push(aiBullet);
 
     const result = this.victorySystem.checkVictory();
-    if (result !== VictoryResult.ONGOING) {
-      this.endGame(result);
-    }
+    if (result !== VictoryResult.ONGOING) this.endGame(result);
   }
 
-  startGame(): void {
-    this.isGameStarted = true;
-    this.isPaused = false;
-  }
-
-  pauseGame(): void {
-    this.isPaused = true;
-  }
-
-  resumeGame(): void {
-    this.isPaused = false;
-  }
+  startGame(): void { this.isGameStarted = true; this.isPaused = false; }
+  pauseGame(): void { this.isPaused = true; }
+  resumeGame(): void { this.isPaused = false; }
 
   endGame(result: VictoryResult): void {
     this.isGameStarted = false;
     this.scene.events.emit("game-ended", result);
   }
 
+  /**
+   * 玩家点击敌军士兵：发射队首炮弹，检查单词匹配，
+   * 正确则锁定士兵（不可再点击），进入飞行队列。
+   */
   handlePlayerClick(target: BattleSoldier): void {
-    if (target.isLocked()) {
-      return;
-    }
-
-    if (!this.playerCrystal.getTurret().hasBullets()) {
-      return;
-    }
+    if (target.isLocked()) return;
+    if (!this.playerCrystal.getTurret().hasBullets()) return;
 
     const bullet = this.combatSystem.launchBullet(this.playerCrystal, target);
 
@@ -251,38 +227,27 @@ export class BattleGameManager {
       const isMatch = bullet.checkMatch();
       if (isMatch) {
         target.lock();
+        // 点击时就朗读单词（而非等炮弹飞到）
         this.speakWord(bullet.getWord());
       }
       this.flyingBullets.push(bullet);
     }
   }
 
+  /** 丢弃队首炮弹（换弹） */
   discardBullet(): void {
     if (this.playerCrystal.getTurret().hasBullets()) {
       this.playerCrystal.removeFrontBullet();
     }
   }
 
-  getWrongWords(): WordData[] {
-    return this.wrongWords;
-  }
+  getWrongWords(): WordData[] { return this.wrongWords; }
+  getPlayerCrystal(): BattleCrystal { return this.playerCrystal; }
+  getEnemyCrystal(): BattleCrystal { return this.enemyCrystal; }
+  getEnemySoldiers(): BattleSoldier[] { return this.enemySoldiers; }
+  getVictorySystem(): VictorySystem { return this.victorySystem; }
 
-  getPlayerCrystal(): BattleCrystal {
-    return this.playerCrystal;
-  }
-
-  getEnemyCrystal(): BattleCrystal {
-    return this.enemyCrystal;
-  }
-
-  getEnemySoldiers(): BattleSoldier[] {
-    return this.enemySoldiers;
-  }
-
-  getVictorySystem(): VictorySystem {
-    return this.victorySystem;
-  }
-
+  /** 使用浏览器 TTS 朗读单词（英语，略慢速） */
   private speakWord(word: string): void {
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();

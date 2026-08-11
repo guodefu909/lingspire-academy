@@ -1,34 +1,88 @@
 {
   "words": [
-    {
-      "word": "cat",
-      "imageUrl": "{base}cat.png",
-      "category": "animal",
-      "chinese": "猫"
-    },
-    {
-      "word": "dog",
-      "imageUrl": "{base}dog.png",
-      "category": "animal",
-      "chinese": "狗"
-    },
-    {
-      "word": "lion",
-      "imageUrl": "{base}lion.png",
-      "category": "animal",
-      "chinese": "狮子"
-    },
-    {
-      "word": "tiger",
-      "imageUrl": "{base}tiger.png",
-      "category": "animal",
-      "chinese": "老虎"
-    },
-    {
-      "word": "bird",
-      "imageUrl": "{base}bird.png",
-      "category": "animal",
-      "chinese": "鸟"
-    }
+    { "word": "cat", "imageUrl": "{base}cat.png", "category": "animal", "chinese": "猫" },
+    { "word": "dog", "imageUrl": "{base}dog.png", "category": "animal", "chinese": "狗" },
+    { "word": "bird", "imageUrl": "{base}bird.png", "category": "animal", "chinese": "鸟" },
+    { "word": "fish", "imageUrl": "{base}fish.png", "category": "animal", "chinese": "鱼" },
+    { "word": "lion", "imageUrl": "{base}lion.png", "category": "animal", "chinese": "狮子" },
+    { "word": "tiger", "imageUrl": "{base}tiger.png", "category": "animal", "chinese": "老虎" },
+    { "word": "mouse", "imageUrl": "{base}mouse.png", "category": "animal", "chinese": "老鼠" },
+
+    { "word": "teacher", "imageUrl": "{base}teacher.png", "category": "job", "chinese": "老师" },
+    { "word": "doctor", "imageUrl": "{base}doctor.png", "category": "job", "chinese": "医生" },
+    { "word": "nurse", "imageUrl": "{base}nurse.png", "category": "job", "chinese": "护士" },
+    { "word": "pilot", "imageUrl": "{base}pilot.png", "category": "job", "chinese": "飞行员" },
+    { "word": "police", "imageUrl": "{base}police.png", "category": "job", "chinese": "警察" },
+    { "word": "farmer", "imageUrl": "{base}farmer.png", "category": "job", "chinese": "农民" },
+    { "word": "cook", "imageUrl": "{base}cook.png", "category": "job", "chinese": "厨师" },
+    { "word": "singer", "imageUrl": "{base}singer.png", "category": "job", "chinese": "歌手" },
+    { "word": "dancer", "imageUrl": "{base}dancer.png", "category": "job", "chinese": "舞者" },
+    { "word": "artist", "imageUrl": "{base}artist.png", "category": "job", "chinese": "画家" },
+    { "word": "scientist", "imageUrl": "{base}scientist.png", "category": "job", "chinese": "科学家" },
+    { "word": "astronaut", "imageUrl": "{base}astronaut.png", "category": "job", "chinese": "宇航员" },
+    { "word": "firefighter", "imageUrl": "{base}firefighter.png", "category": "job", "chinese": "消防员" },
+    { "word": "mechanic", "imageUrl": "{base}mechanic.png", "category": "job", "chinese": "机械师" },
+    { "word": "lifeguard", "imageUrl": "{base}lifeguard.png", "category": "job", "chinese": "救生员" },
+    { "word": "detective", "imageUrl": "{base}detective.png", "category": "job", "chinese": "侦探" },
+    { "word": "judge", "imageUrl": "{base}judge.png", "category": "job", "chinese": "法官" },
+    { "word": "guard", "imageUrl": "{base}guard.png", "category": "job", "chinese": "保安" },
+
+    { "word": "father", "imageUrl": "{base}father.png", "category": "family", "chinese": "父亲" },
+    { "word": "mother", "imageUrl": "{base}mother.png", "category": "family", "chinese": "母亲" },
+    { "word": "brother", "imageUrl": "{base}brother.png", "category": "family", "chinese": "兄弟" },
+    { "word": "sister", "imageUrl": "{base}sister.png", "category": "family", "chinese": "姐妹" },
+    { "word": "uncle", "imageUrl": "{base}uncle.png", "category": "family", "chinese": "叔叔" },
+    { "word": "aunt", "imageUrl": "{base}aunt.png", "category": "family", "chinese": "阿姨" },
+    { "word": "grandpa", "imageUrl": "{base}grandpa.png", "category": "family", "chinese": "爷爷" },
+    { "word": "grandma", "imageUrl": "{base}grandma.png", "category": "family", "chinese": "奶奶" },
+    { "word": "family", "imageUrl": "{base}family.png", "category": "family", "chinese": "家庭" },
+    { "word": "parent", "imageUrl": "{base}parent.png", "category": "family", "chinese": "父母" },
+    { "word": "friends", "imageUrl": "{base}friends.png", "category": "family", "chinese": "朋友" },
+
+    { "word": "boy", "imageUrl": "{base}boy.png", "category": "people", "chinese": "男孩" },
+    { "word": "girl", "imageUrl": "{base}girl.png", "category": "people", "chinese": "女孩" },
+    { "word": "student", "imageUrl": "{base}student.png", "category": "people", "chinese": "学生" },
+    { "word": "pupil", "imageUrl": "{base}pupil.png", "category": "people", "chinese": "小学生" },
+
+    { "word": "school", "imageUrl": "{base}school.png", "category": "school", "chinese": "学校" },
+    { "word": "classroom", "imageUrl": "{base}classroom.png", "category": "school", "chinese": "教室" },
+    { "word": "playground", "imageUrl": "{base}playground.png", "category": "school", "chinese": "操场" },
+    { "word": "blackboard", "imageUrl": "{base}blackboard.png", "category": "school", "chinese": "黑板" },
+    { "word": "book", "imageUrl": "{base}book.png", "category": "school", "chinese": "书" },
+    { "word": "pen", "imageUrl": "{base}pen.png", "category": "school", "chinese": "钢笔" },
+    { "word": "pencil", "imageUrl": "{base}pencil.png", "category": "school", "chinese": "铅笔" },
+    { "word": "ruler", "imageUrl": "{base}ruler.png", "category": "school", "chinese": "尺子" },
+    { "word": "rubber", "imageUrl": "{base}rubber.png", "category": "school", "chinese": "橡皮" },
+    { "word": "paper", "imageUrl": "{base}paper.png", "category": "school", "chinese": "纸" },
+    { "word": "map", "imageUrl": "{base}map.png", "category": "school", "chinese": "地图" },
+    { "word": "bag", "imageUrl": "{base}bag.png", "category": "school", "chinese": "书包" },
+    { "word": "desk", "imageUrl": "{base}desk.png", "category": "school", "chinese": "课桌" },
+    { "word": "homework", "imageUrl": "{base}homework.png", "category": "school", "chinese": "作业" },
+
+    { "word": "home", "imageUrl": "{base}home.png", "category": "place", "chinese": "家" },
+    { "word": "door", "imageUrl": "{base}door.png", "category": "place", "chinese": "门" },
+    { "word": "window", "imageUrl": "{base}window.png", "category": "place", "chinese": "窗户" },
+    { "word": "toilet", "imageUrl": "{base}toilet.png", "category": "place", "chinese": "厕所" },
+    { "word": "tree", "imageUrl": "{base}tree.png", "category": "place", "chinese": "树" },
+
+    { "word": "camera", "imageUrl": "{base}camera.png", "category": "object", "chinese": "相机" },
+    { "word": "chair", "imageUrl": "{base}chair.png", "category": "object", "chinese": "椅子" },
+    { "word": "desktop", "imageUrl": "{base}desktop.png", "category": "object", "chinese": "电脑" },
+    { "word": "balloon", "imageUrl": "{base}balloon.png", "category": "object", "chinese": "气球" },
+    { "word": "cards", "imageUrl": "{base}cards.png", "category": "object", "chinese": "卡片" },
+
+    { "word": "swimmer", "imageUrl": "{base}swimmer.png", "category": "sport", "chinese": "游泳者" },
+    { "word": "cyclist", "imageUrl": "{base}cyclist.png", "category": "sport", "chinese": "骑行者" },
+    { "word": "climber", "imageUrl": "{base}climber.png", "category": "sport", "chinese": "登山者" },
+    { "word": "juggler", "imageUrl": "{base}juggler.png", "category": "sport", "chinese": "杂耍者" },
+
+    { "word": "walk", "imageUrl": "{base}walking.png", "category": "action", "chinese": "走路" },
+
+    { "word": "superhero", "imageUrl": "{base}superhero.png", "category": "fantasy", "chinese": "超级英雄" },
+    { "word": "vampire", "imageUrl": "{base}vampire.png", "category": "fantasy", "chinese": "吸血鬼" },
+    { "word": "zombie", "imageUrl": "{base}zombie.png", "category": "fantasy", "chinese": "僵尸" },
+    { "word": "fairy", "imageUrl": "{base}fairy.png", "category": "fantasy", "chinese": "仙女" },
+    { "word": "genie", "imageUrl": "{base}genie.png", "category": "fantasy", "chinese": "精灵" },
+    { "word": "mage", "imageUrl": "{base}mage.png", "category": "fantasy", "chinese": "魔法师" }
   ]
 }

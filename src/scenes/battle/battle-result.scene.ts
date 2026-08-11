@@ -12,6 +12,12 @@ interface ResultData {
   crystalHealth: number;
 }
 
+/**
+ * 对战结果场景 —— 显示胜负 + 需复习单词列表。
+ *
+ * 答错的单词显示：图片 + 英文 + 中文释义。
+ * 可"再来一局"或"返回菜单"。
+ */
 export class BattleResultScene extends Phaser.Scene {
   private resultData!: ResultData;
 

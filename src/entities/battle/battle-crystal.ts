@@ -1,10 +1,14 @@
 import * as Phaser from "phaser";
-import { PathType } from "@config/battle-constants";
 import { BattleTurret } from "./battle-turret";
-import { BattleSoldier } from "./battle-soldier";
 import { BattleBullet } from "./battle-bullet";
 import { WordData } from "../../managers/battle/word-library.manager";
 
+/**
+ * 战斗水晶 —— 双方的基地核心，拥有血量和炮弹炮塔。
+ *
+ * 水晶本体图形已设为透明（地图上有对应素材），
+ * 仅保留血条显示和炮塔（炮弹队列展示区）。
+ */
 export class BattleCrystal extends Phaser.GameObjects.Container {
   private health: number;
   private maxHealth: number;
@@ -41,6 +45,7 @@ export class BattleCrystal extends Phaser.GameObjects.Container {
 
     this.add([this.crystalGraphics, this.healthBar, this.healthText]);
 
+    // 炮塔：显示待发射炮弹队列
     this.turret = new BattleTurret(scene, 0, 0, isPlayer);
     this.add(this.turret);
 
@@ -50,17 +55,18 @@ export class BattleCrystal extends Phaser.GameObjects.Container {
     scene.add.existing(this);
   }
 
+  /** 绘制水晶本体 —— 已设为透明，地图上已有对应素材 */
   private drawCrystal(): void {
     this.crystalGraphics.clear();
   }
 
+  /** 更新血条：灰色底 + 红/绿/黄色填充 + 数字文字 */
   private updateHealthBar(): void {
     this.healthBar.clear();
 
     const barWidth = 80;
     const barHeight = 8;
     const healthPercent = this.health / this.maxHealth;
-
     const barY = this.isPlayer ? -70 : 60;
 
     this.healthBar.fillStyle(0x333333, 1);
@@ -74,10 +80,8 @@ export class BattleCrystal extends Phaser.GameObjects.Container {
           : 0xf44336;
     this.healthBar.fillStyle(healthColor, 1);
     this.healthBar.fillRect(
-      -barWidth / 2,
-      barY,
-      barWidth * healthPercent,
-      barHeight,
+      -barWidth / 2, barY,
+      barWidth * healthPercent, barHeight,
     );
 
     this.healthBar.lineStyle(1, 0xffffff, 0.5);
@@ -89,41 +93,19 @@ export class BattleCrystal extends Phaser.GameObjects.Container {
   takeDamage(damage: number): void {
     this.health = Math.max(0, this.health - damage);
     this.updateHealthBar();
-
-    if (this.health <= 0) {
-      this.onDeath();
-    }
+    if (this.health <= 0) this.onDeath();
   }
 
   private onDeath(): void {
     this.scene.events.emit("crystal-destroyed", this.isPlayer);
   }
 
-  getHealth(): number {
-    return this.health;
-  }
+  getHealth(): number { return this.health; }
+  isDead(): boolean { return this.health <= 0; }
 
-  isDead(): boolean {
-    return this.health <= 0;
-  }
-
-  addBullet(wordData: WordData): void {
-    this.turret.addBullet(wordData);
-  }
-
-  getFrontBullet(): BattleBullet | null {
-    return this.turret.getFrontBullet();
-  }
-
-  removeFrontBullet(): void {
-    this.turret.removeFrontBullet();
-  }
-
-  getTurret(): BattleTurret {
-    return this.turret;
-  }
-
-  getIsPlayer(): boolean {
-    return this.isPlayer;
-  }
+  addBullet(wordData: WordData): void { this.turret.addBullet(wordData); }
+  getFrontBullet(): BattleBullet | null { return this.turret.getFrontBullet(); }
+  removeFrontBullet(): void { this.turret.removeFrontBullet(); }
+  getTurret(): BattleTurret { return this.turret; }
+  getIsPlayer(): boolean { return this.isPlayer; }
 }

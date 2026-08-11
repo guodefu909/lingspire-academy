@@ -5,12 +5,24 @@ import { WordLibraryManager } from "../../managers/battle/word-library.manager";
 import { PathManager } from "../../managers/battle/path.manager";
 import { BattleConfig } from "../../data/battle/battle-config";
 
+/**
+ * 士兵生成系统 —— 控制出兵间隔和出兵逻辑。
+ *
+ * 出兵间隔按游戏时间进度线性递减：initialInterval → finalInterval。
+ * 每次出兵在三路各生成一个士兵（携带随机单词），玩家方和敌方共用同一单词。
+ */
 export class SoldierSpawnSystem {
+  /** 当前出兵间隔 ms */
   private spawnInterval: number;
+  /** 最快间隔（游戏末段） */
   private minInterval: number;
+  /** 最慢间隔（游戏开局） */
   private maxInterval: number;
+  /** 游戏总时长 */
   private gameDuration: number;
+  /** 游戏已过时间 */
   private accumulatedTime: number = 0;
+  /** 上次出兵时间戳 */
   private lastSpawnTime: number = -6000;
   private wordLibrary: WordLibraryManager;
   private pathManager: PathManager;
@@ -32,10 +44,15 @@ export class SoldierSpawnSystem {
     this.spawnInterval = this.maxInterval;
   }
 
+  /**
+   * 根据游戏进度（0~1）线性插值计算当前出兵间隔。
+   * progress=0 → maxInterval，progress=1 → minInterval。
+   */
   calculateSpawnInterval(progress: number): number {
     return this.maxInterval - progress * (this.maxInterval - this.minInterval);
   }
 
+  /** 每帧调用：累计时间，达到间隔时出兵 */
   update(time: number, delta: number, crystals: BattleCrystal[]): void {
     this.accumulatedTime += delta;
 
@@ -48,19 +65,22 @@ export class SoldierSpawnSystem {
     }
   }
 
+  /**
+   * 执行一波出兵：三路（上中下）各生成一个单词，
+   * 玩家方和敌方共用同一单词（双方需要打同一个词），
+   * 路径顺序和水晶顺序随机打乱以增加变化。
+   */
   private spawnSoldiers(crystals: BattleCrystal[]): void {
     const paths = [PathType.TOP, PathType.MIDDLE, PathType.BOTTOM];
-
-    // 随机化路径顺序
     const shuffledPaths = this.shuffleArray([...paths]);
 
-    // 先为每条路生成单词（玩家和敌方使用相同的单词）
+    // 为每条路分配随机单词（玩家和敌方共用）
     const pathWords: Map<PathType, any> = new Map();
     shuffledPaths.forEach((pathType) => {
       pathWords.set(pathType, this.wordLibrary.getRandomWord());
     });
 
-    // 随机化水晶顺序
+    // 随机化水晶处理顺序
     const shuffledCrystals = this.shuffleArray([...crystals]);
 
     shuffledCrystals.forEach((crystal) => {
@@ -87,6 +107,7 @@ export class SoldierSpawnSystem {
     });
   }
 
+  /** Fisher-Yates 洗牌 */
   private shuffleArray<T>(array: T[]): T[] {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -95,9 +116,7 @@ export class SoldierSpawnSystem {
     return array;
   }
 
-  getSpawnInterval(): number {
-    return this.spawnInterval;
-  }
+  getSpawnInterval(): number { return this.spawnInterval; }
 
   reset(): void {
     this.accumulatedTime = 0;

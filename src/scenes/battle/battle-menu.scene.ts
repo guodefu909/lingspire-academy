@@ -4,6 +4,9 @@ import {
   BATTLE_CANVAS_HEIGHT,
 } from "@config/battle-constants";
 
+/**
+ * 对战菜单场景 —— 游戏入口页，提供"开始游戏"/"学习统计"/"返回主页面"三个选项。
+ */
 export class BattleMenuScene extends Phaser.Scene {
   private healthSlider!: Phaser.GameObjects.Rectangle;
   private healthValue: number = 20;

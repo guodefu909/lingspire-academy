@@ -2,6 +2,13 @@ import * as Phaser from "phaser";
 import { PathType } from "@config/battle-constants";
 import { PathManager } from "../../managers/battle/path.manager";
 
+/**
+ * 战斗士兵实体 —— 沿路径移动的士兵，支持六方向精灵动画、血条显示和单词标签。
+ *
+ * 士兵按照 PathManager 定义的路线行走，progress 0=起点 1=终点。
+ * 玩家士兵从 progress 0→1，敌方士兵从 1→0，
+ * 以实现双方互向对方基地移动。
+ */
 export class BattleSoldier extends Phaser.GameObjects.Container {
   private word: string;
   private imageUrl: string;
@@ -11,19 +18,36 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
   private pathType: PathType;
   private pathProgress: number;
   private pathManager: PathManager;
+  /** 走动精灵图 */
   private sprite: Phaser.GameObjects.Sprite;
+  /** 胸前显示的单词标签 */
   private wordText: Phaser.GameObjects.Text;
+  /** 头顶血条 */
   private healthBar: Phaser.GameObjects.Graphics;
+  /** 是否属于玩家一方 */
   private isPlayerOwned: boolean;
+  /** 是否已开始移动（用于延迟碰撞检测） */
   private hasStartedMoving: boolean = false;
+  /** 淡入进度计时器 */
   private fadeInProgress: number = 0;
+  /** 出生后不可见阶段时长 */
   private invisibleDuration: number = 700;
+  /** 淡入动画时长 */
   private fadeInDuration: number = 300;
+  /** 是否已被正确子弹锁定（不再可点击） */
   private locked: boolean = false;
+  /** 上一帧坐标，用于计算移动方向 */
   private prevX: number = 0;
   private prevY: number = 0;
+  /** 手动动画帧索引 0~7 */
   private frameIndex: number = 0;
+  /** 手动动画计时器 */
   private frameTimer: number = 0;
+  /**
+   * 当前方向对应的精灵图起始帧号。
+   * 0=下  8=左下  16=左  24=左上  32=上
+   * 右侧方向通过 setFlipX(true) 镜像实现。
+   */
   private animBaseFrame: number = 32;
 
   constructor(
@@ -45,6 +69,7 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
     this.maxHealth = maxHealth;
     this.health = 1;
 
+    // 中路路径更短，调低速度使各路到达时间一致
     if (pathType === PathType.MIDDLE) {
       this.speed = speed * 0.707;
     } else {
@@ -58,11 +83,13 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
     this.setAlpha(0);
     this.setDepth(this.isPlayerOwned ? 1 : 2);
 
+    // 行走精灵（256px 原始帧 → 0.25 缩放 = 64px 显示）
     this.sprite = scene.add.sprite(0, 0, "soldier-walk", 32);
     this.sprite.setScale(0.25);
 
     this.healthBar = scene.add.graphics();
 
+    // 胸前单词标签
     this.wordText = scene.add
       .text(0, 0, word, {
         fontSize: "13px",
@@ -73,6 +100,7 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
       })
       .setOrigin(0.5);
 
+    // 玩家蓝色调，敌方红色调
     if (this.isPlayerOwned) {
       this.sprite.setTint(0xccddff);
     } else {
@@ -80,21 +108,20 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
     }
 
     this.add([this.sprite, this.wordText, this.healthBar]);
-
     this.updateHealthBar();
 
+    // 初始化位置
     if (this.isPlayerOwned) {
       const startPos = pathManager.getPositionOnPath(pathType, 0);
       this.setPosition(startPos.x, startPos.y);
-      this.prevX = startPos.x;
-      this.prevY = startPos.y;
     } else {
       const startPos = pathManager.getPositionOnPath(pathType, 1);
       this.setPosition(startPos.x, startPos.y);
-      this.prevX = startPos.x;
-      this.prevY = startPos.y;
     }
+    this.prevX = this.x;
+    this.prevY = this.y;
 
+    // 点击区域覆盖精灵 + 血条 + 标签
     this.setInteractive(
       new Phaser.Geom.Rectangle(-30, -35, 60, 70),
       Phaser.Geom.Rectangle.Contains,
@@ -103,41 +130,62 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
     scene.add.existing(this);
   }
 
+  /**
+   * 根据位移向量选择对应的行走方向动画。
+   * 角度从正右 0° 逆时针计算，映射到六方向精灵行。
+   *
+   * 方向映射：右（-22.5°~22.5°）→ 左行+镜像  右上（-67.5°~-22.5°）→ 左上+镜像
+   *           上（-112.5°~-67.5°）→ 上行      左上（-157.5°~-112.5°）→ 上行
+   *           左（>157.5° or <-157.5°）→ 左行  左下（112.5°~157.5°）→ 左下
+   *           下（67.5°~112.5°）→ 下行        右下（22.5°~67.5°）→ 下行
+   */
   private updateDirectionAnimation(dx: number, dy: number): void {
     if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) return;
 
     const a = (Math.atan2(dy, dx) * 180) / Math.PI;
 
     if (a > 157.5 || a < -157.5) {
+      // 左
       this.sprite.setFlipX(false);
       this.animBaseFrame = 16;
     } else if (a >= 112.5) {
+      // 左下
       this.sprite.setFlipX(false);
       this.animBaseFrame = 8;
     } else if (a > 67.5) {
+      // 下
       this.sprite.setFlipX(false);
       this.animBaseFrame = 0;
     } else if (a > 22.5) {
+      // 右下 → 用下行动画
       this.sprite.setFlipX(false);
       this.animBaseFrame = 0;
     } else if (a >= -22.5) {
+      // 右 → 左行动画 + 水平镜像
       this.sprite.setFlipX(true);
       this.animBaseFrame = 16;
     } else if (a >= -67.5) {
+      // 右上 → 左上动画 + 镜像
       this.sprite.setFlipX(true);
       this.animBaseFrame = 24;
     } else if (a >= -112.5) {
+      // 上
       this.sprite.setFlipX(false);
       this.animBaseFrame = 32;
     } else if (a >= -157.5) {
+      // 左上 → 用上行动画
       this.sprite.setFlipX(false);
       this.animBaseFrame = 32;
     } else {
+      // 左
       this.sprite.setFlipX(false);
       this.animBaseFrame = 16;
     }
   }
 
+  /**
+   * 头顶血条：红色方块，每格 16×5 px，只显示当前血量数量，居中排列。
+   */
   private updateHealthBar(): void {
     this.healthBar.clear();
 
@@ -157,7 +205,11 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
     }
   }
 
+  /**
+   * 每帧更新：淡入效果 → 手动帧动画（10fps）→ 沿路径移动 → 刷新方向动画。
+   */
   move(delta: number): void {
+    // 出生淡入效果：先隐藏 700ms，再 300ms 淡入
     if (this.fadeInProgress < this.invisibleDuration + this.fadeInDuration) {
       this.fadeInProgress += delta;
 
@@ -170,6 +222,7 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
       }
     }
 
+    // 手动逐帧动画：每 100ms 切换一帧，8 帧循环
     this.frameTimer += delta;
     if (this.frameTimer >= 100) {
       this.frameTimer = 0;
@@ -177,6 +230,7 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
       this.sprite.setFrame(this.animBaseFrame + this.frameIndex);
     }
 
+    // 沿路径移动
     const pathLength = this.pathManager.getPathLength(this.pathType);
     const progressDelta = (this.speed * delta) / 1000 / pathLength;
 
@@ -196,6 +250,7 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
     );
     this.setPosition(newPos.x, newPos.y);
 
+    // 检测移动方向，更新精灵动画方向
     const dx = newPos.x - this.prevX;
     const dy = newPos.y - this.prevY;
     this.prevX = newPos.x;
@@ -206,27 +261,20 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
     }
   }
 
+  /** 是否已抵达路径终点 */
   hasReachedEnd(): boolean {
-    if (!this.hasStartedMoving) {
-      return false;
-    }
-
-    if (this.isPlayerOwned) {
-      return this.pathProgress >= 1;
-    } else {
-      return this.pathProgress <= 0;
-    }
+    if (!this.hasStartedMoving) return false;
+    return this.isPlayerOwned ? this.pathProgress >= 1 : this.pathProgress <= 0;
   }
 
+  /** 受到 1 点伤害 */
   takeDamage(): void {
     this.health = Math.max(0, this.health - 1);
     this.updateHealthBar();
-
-    if (this.health <= 0) {
-      this.onDeath();
-    }
+    if (this.health <= 0) this.onDeath();
   }
 
+  /** 恢复 1 点血量（上限 maxHealth） */
   heal(): void {
     if (this.health < this.maxHealth) {
       this.health++;
@@ -234,36 +282,17 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
     }
   }
 
+  /** 死亡时发出事件通知外部清理 */
   private onDeath(): void {
     this.scene.events.emit("soldier-died", this);
     this.destroy();
   }
 
-  getHealth(): number {
-    return this.health;
-  }
-
-  getWord(): string {
-    return this.word;
-  }
-
-  getImageUrl(): string {
-    return this.imageUrl;
-  }
-
-  getPathProgress(): number {
-    return this.pathProgress;
-  }
-
-  getIsPlayerOwned(): boolean {
-    return this.isPlayerOwned;
-  }
-
-  lock(): void {
-    this.locked = true;
-  }
-
-  isLocked(): boolean {
-    return this.locked;
-  }
+  getHealth(): number { return this.health; }
+  getWord(): string { return this.word; }
+  getImageUrl(): string { return this.imageUrl; }
+  getPathProgress(): number { return this.pathProgress; }
+  getIsPlayerOwned(): boolean { return this.isPlayerOwned; }
+  lock(): void { this.locked = true; }
+  isLocked(): boolean { return this.locked; }
 }
