@@ -67,11 +67,11 @@ export class BattleTurret extends Phaser.GameObjects.Container {
     const bullet = this.bullets[0];
     const displayBullet = this.scene.add.container(0, 0);
 
-    // 蓝色圆形底
+    // 白色圆形底
     const circle = this.scene.add.graphics();
-    circle.fillStyle(0x4a90e2, 1);
+    circle.fillStyle(0xffffff, 1);
     circle.fillCircle(0, 0, 25);
-    circle.lineStyle(3, 0xffffff, 0.9);
+    circle.lineStyle(2, 0xcccccc, 0.8);
     circle.strokeCircle(0, 0, 25);
 
     // 单词图片（已预加载为纹理），未加载时显示彩色首字母头像

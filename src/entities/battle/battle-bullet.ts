@@ -52,8 +52,8 @@ export class BattleBullet extends Phaser.GameObjects.Container {
     this.glow.fillStyle(color, 0.5);
     this.glow.fillCircle(0, 0, 8);
 
-    this.glow.fillStyle(0xffffff, 1);
-    this.glow.fillCircle(0, 0, 4);
+    this.glow.fillStyle(0xffffff, 0.9);
+    this.glow.fillCircle(0, 0, 3);
   }
 
   /** 根据单词首字母哈希选择一个颜色 */
