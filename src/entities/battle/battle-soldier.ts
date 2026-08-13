@@ -79,24 +79,29 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
     this.isPlayerOwned = isPlayerOwned;
     this.hasStartedMoving = false;
     this.pathProgress = this.isPlayerOwned ? 0 : 1;
+    // 初始朝向：玩家朝上，敌方朝下
+    this.animBaseFrame = this.isPlayerOwned ? 32 : 0;
 
     this.setAlpha(0);
     this.setDepth(this.isPlayerOwned ? 1 : 2);
 
     // 行走精灵（256px 原始帧 → 0.25 缩放 = 64px 显示）
-    this.sprite = scene.add.sprite(0, 0, "soldier-walk", 32);
+    this.sprite = scene.add.sprite(0, 0, "soldier-walk", this.animBaseFrame);
     this.sprite.setScale(0.25);
 
     this.healthBar = scene.add.graphics();
 
-    // 胸前单词标签
+    // 胸前单词标签：敌方白色加粗+红色描边，玩家白色常规
     this.wordText = scene.add
       .text(0, 0, word, {
         fontSize: "13px",
         color: "#ffffff",
         fontFamily: "Arial",
-        backgroundColor: "#33333388",
-        padding: { x: 3, y: 1 },
+        fontStyle: this.isPlayerOwned ? "normal" : "bold",
+        stroke: this.isPlayerOwned ? "#333333" : "#d32f2f",
+        strokeThickness: this.isPlayerOwned ? 2 : 4,
+        backgroundColor: "#33333366",
+        padding: { x: 4, y: 2 },
       })
       .setOrigin(0.5);
 
@@ -121,9 +126,9 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
     this.prevX = this.x;
     this.prevY = this.y;
 
-    // 点击区域覆盖精灵 + 血条 + 标签
+    // 点击区域：放大到覆盖精灵 + 血条 + 标签，降低点击难度
     this.setInteractive(
-      new Phaser.Geom.Rectangle(-30, -35, 60, 70),
+      new Phaser.Geom.Rectangle(-40, -48, 80, 90),
       Phaser.Geom.Rectangle.Contains,
     );
 
@@ -250,15 +255,13 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
     );
     this.setPosition(newPos.x, newPos.y);
 
-    // 检测移动方向，更新精灵动画方向
+    // 检测移动方向，更新精灵动画方向（隐藏期也实时更新，保证可见时朝向正确）
     const dx = newPos.x - this.prevX;
     const dy = newPos.y - this.prevY;
     this.prevX = newPos.x;
     this.prevY = newPos.y;
 
-    if (this.fadeInProgress >= this.invisibleDuration + this.fadeInDuration) {
-      this.updateDirectionAnimation(dx, dy);
-    }
+    this.updateDirectionAnimation(dx, dy);
   }
 
   /** 是否已抵达路径终点 */
