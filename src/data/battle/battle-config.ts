@@ -16,11 +16,11 @@ export interface BattleConfig {
 }
 
 export const DEFAULT_BATTLE_CONFIG: BattleConfig = {
-  crystal: { initialHealth: 20, maxHealth: 20 },
-  soldier: { initialHealth: 1, maxHealth: 5, speed: 60 },
-  spawn: { initialInterval: 8000, finalInterval: 1000 },
+  crystal: { initialHealth: 5, maxHealth: 5 },
+  soldier: { initialHealth: 1, maxHealth: 5, speed: 40 },
+  spawn: { initialInterval: 10000, finalInterval: 3000 },
   word: { imageBaseUrl: "words/" },
   bullet: { speed: 300, maxDisplayCount: 10, maxCapacity: 100 },
   game: { duration: 5 * 60 * 1000 },
-  ai: { errorRate: 0.2 },
+  ai: { errorRate: 0.05 },
 };

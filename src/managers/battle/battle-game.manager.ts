@@ -8,6 +8,7 @@ import { SoldierSpawnSystem } from "../../systems/battle/soldier-spawn.system";
 import { SoldierMovementSystem } from "../../systems/battle/soldier-movement.system";
 import { CombatSystem } from "../../systems/battle/combat.system";
 import { AISystem } from "../../systems/battle/ai.system";
+import { AIDifficultyManager } from "../battle/ai-difficulty.manager";
 import { VictorySystem } from "../../systems/battle/victory.system";
 import { BattleCrystal } from "../../entities/battle/battle-crystal";
 import { BattleSoldier } from "../../entities/battle/battle-soldier";
@@ -38,6 +39,7 @@ export class BattleGameManager {
   private soldierMovementSystem!: SoldierMovementSystem;
   private combatSystem!: CombatSystem;
   private aiSystem!: AISystem;
+  private aiDifficulty!: AIDifficultyManager;
   private victorySystem!: VictorySystem;
 
   private playerCrystal!: BattleCrystal;
@@ -108,8 +110,9 @@ export class BattleGameManager {
       }
     });
 
+    this.aiDifficulty = new AIDifficultyManager(this.config.ai.errorRate);
     this.aiSystem = new AISystem(
-      this.enemyCrystal, this.combatSystem, this.config.ai.errorRate,
+      this.enemyCrystal, this.combatSystem, this.aiDifficulty.getEffectiveRate(),
     );
 
     this.victorySystem = new VictorySystem(
@@ -210,6 +213,8 @@ export class BattleGameManager {
 
   endGame(result: VictoryResult): void {
     this.isGameStarted = false;
+    // 记录本局结果，动态调整 AI 失败率
+    this.aiDifficulty.recordResult(result);
     this.scene.events.emit("game-ended", result);
   }
 

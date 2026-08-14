@@ -70,18 +70,18 @@ export class BattleTurret extends Phaser.GameObjects.Container {
     // 白色圆形底
     const circle = this.scene.add.graphics();
     circle.fillStyle(0xffffff, 1);
-    circle.fillCircle(0, 0, 25);
+    circle.fillCircle(0, 0, 37);
     circle.lineStyle(2, 0xcccccc, 0.8);
-    circle.strokeCircle(0, 0, 25);
+    circle.strokeCircle(0, 0, 37);
 
     // 单词图片（已预加载为纹理），未加载时显示彩色首字母头像
     const key = `word_img_${bullet.getWord()}`;
     let imageObj: Phaser.GameObjects.Image | Phaser.GameObjects.Container;
 
     if (this.scene.textures.exists(key)) {
-      imageObj = this.scene.add.image(0, 0, key).setDisplaySize(44, 44);
+      imageObj = this.scene.add.image(0, 0, key).setDisplaySize(66, 66);
     } else {
-      imageObj = this.createFallbackAvatar(this.scene, bullet.getWord(), 22);
+      imageObj = this.createFallbackAvatar(this.scene, bullet.getWord(), 33);
     }
 
     displayBullet.add([circle, imageObj]);
@@ -90,7 +90,7 @@ export class BattleTurret extends Phaser.GameObjects.Container {
     // 炮弹数量标签
     if (this.bullets.length > 0) {
       const countText = this.scene.add
-        .text(0, 50, `炮弹: ${this.bullets.length}`, {
+        .text(0, 66, `炮弹: ${this.bullets.length}`, {
           fontSize: "14px",
           color: "#ffffff",
           fontFamily: "Arial",

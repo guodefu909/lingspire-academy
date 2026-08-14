@@ -45,8 +45,10 @@ export class BattleCrystal extends Phaser.GameObjects.Container {
 
     this.add([this.crystalGraphics, this.healthBar, this.healthText]);
 
-    // 炮塔：显示待发射炮弹队列
-    this.turret = new BattleTurret(scene, 0, 0, isPlayer);
+    // 炮塔：玩家炮塔在左下角 (81,690)，敌方炮塔在其中心对称位置 (943,78)
+    const turretX = isPlayer ? 81 - x : 943 - x;
+    const turretY = isPlayer ? 690 - y : 78 - y;
+    this.turret = new BattleTurret(scene, turretX, turretY, isPlayer);
     this.add(this.turret);
 
     this.drawCrystal();

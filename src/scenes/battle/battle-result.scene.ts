@@ -139,7 +139,28 @@ export class BattleResultScene extends Phaser.Scene {
           fontFamily: "Arial",
         })
         .setOrigin(0, 0.5);
+
+      this.createSpeakButton(BATTLE_CANVAS_WIDTH / 2 + 160, y, word.word);
     }
+  }
+
+  /** 读音按钮：点击朗读该单词 */
+  private createSpeakButton(x: number, y: number, word: string): void {
+    const button = this.add
+      .text(x, y, "🔊", { fontSize: "20px" })
+      .setOrigin(0.5);
+    button.setInteractive({ useHandCursor: true });
+    button.on("pointerdown", () => this.speakWord(word));
+  }
+
+  /** 使用浏览器 TTS 朗读单词（英语，略慢速） */
+  private speakWord(word: string): void {
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(word);
+    u.lang = "en-US";
+    u.rate = 0.8;
+    window.speechSynthesis.speak(u);
   }
 
   private createButtons(): void {

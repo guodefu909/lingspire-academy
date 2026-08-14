@@ -44,8 +44,8 @@ export class SoldierMovementSystem {
       soldier.move(delta);
 
       if (soldier.hasReachedEnd()) {
-        // 攻击目标水晶
-        targetCrystal.takeDamage(1);
+        // 攻击目标水晶：按士兵当前血量造成伤害（血量越高伤害越大）
+        targetCrystal.takeDamage(soldier.getHealth());
 
         if (this.onSoldierHitCrystal) {
           this.onSoldierHitCrystal(soldier, targetCrystal);

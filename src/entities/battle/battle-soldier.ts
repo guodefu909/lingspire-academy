@@ -36,9 +36,6 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
   private fadeInDuration: number = 300;
   /** 是否已被正确子弹锁定（不再可点击） */
   private locked: boolean = false;
-  /** 上一帧坐标，用于计算移动方向 */
-  private prevX: number = 0;
-  private prevY: number = 0;
   /** 手动动画帧索引 0~7 */
   private frameIndex: number = 0;
   /** 手动动画计时器 */
@@ -123,8 +120,6 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
       const startPos = pathManager.getPositionOnPath(pathType, 1);
       this.setPosition(startPos.x, startPos.y);
     }
-    this.prevX = this.x;
-    this.prevY = this.y;
 
     // 点击区域：放大到覆盖精灵 + 血条 + 标签，降低点击难度
     this.setInteractive(
@@ -255,13 +250,19 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
     );
     this.setPosition(newPos.x, newPos.y);
 
-    // 检测移动方向，更新精灵动画方向（隐藏期也实时更新，保证可见时朝向正确）
-    const dx = newPos.x - this.prevX;
-    const dy = newPos.y - this.prevY;
-    this.prevX = newPos.x;
-    this.prevY = newPos.y;
-
-    this.updateDirectionAnimation(dx, dy);
+    // 方向基于路径切线采样（与移动速度无关，避免慢速时单帧位移过小导致朝向检测失效）
+    const tangentEps = 0.05;
+    const tangentProgress = this.isPlayerOwned
+      ? this.pathProgress + tangentEps
+      : this.pathProgress - tangentEps;
+    const tangentPos = this.pathManager.getPositionOnPath(
+      this.pathType,
+      tangentProgress,
+    );
+    this.updateDirectionAnimation(
+      tangentPos.x - newPos.x,
+      tangentPos.y - newPos.y,
+    );
   }
 
   /** 是否已抵达路径终点 */

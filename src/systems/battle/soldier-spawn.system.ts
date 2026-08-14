@@ -27,6 +27,7 @@ export class SoldierSpawnSystem {
   private wordLibrary: WordLibraryManager;
   private pathManager: PathManager;
   private scene: Phaser.Scene;
+  private soldierSpeed: number;
 
   constructor(
     scene: Phaser.Scene,
@@ -42,6 +43,7 @@ export class SoldierSpawnSystem {
     this.minInterval = config.spawn.finalInterval;
     this.gameDuration = gameDuration;
     this.spawnInterval = this.maxInterval;
+    this.soldierSpeed = config.soldier.speed;
   }
 
   /**
@@ -74,10 +76,11 @@ export class SoldierSpawnSystem {
     const paths = [PathType.TOP, PathType.MIDDLE, PathType.BOTTOM];
     const shuffledPaths = this.shuffleArray([...paths]);
 
-    // 为每条路分配随机单词（玩家和敌方共用）
+    // 为每条路分配互不相同的随机单词（玩家和敌方共用）
+    const distinctWords = this.wordLibrary.getRandomWords(paths.length);
     const pathWords: Map<PathType, any> = new Map();
-    shuffledPaths.forEach((pathType) => {
-      pathWords.set(pathType, this.wordLibrary.getRandomWord());
+    shuffledPaths.forEach((pathType, i) => {
+      pathWords.set(pathType, distinctWords[i]);
     });
 
     // 随机化水晶处理顺序
@@ -94,7 +97,7 @@ export class SoldierSpawnSystem {
           pathType,
           this.pathManager,
           undefined,
-          undefined,
+          this.soldierSpeed,
           crystal.getIsPlayer(),
         );
 

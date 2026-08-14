@@ -55,6 +55,36 @@ export class WordLibraryManager {
     return this.words[Math.floor(Math.random() * this.words.length)];
   }
 
+  /**
+   * 加权随机抽取 count 个互不相同的单词。
+   * 使用"不放回"抽取：每抽一个后将其从候选池移除。
+   * 若 count 超过词库总数，返回全部去重后的单词。
+   */
+  getRandomWords(count: number): WordData[] {
+    const pool = [...this.words];
+    const result: WordData[] = [];
+
+    while (result.length < count && pool.length > 0) {
+      const weights = pool.map((w) => this.statsManager.getWeight(w.word));
+      const totalWeight = weights.reduce((sum, w) => sum + w, 0);
+
+      let random = Math.random() * totalWeight;
+      let index = pool.length - 1;
+      for (let i = 0; i < pool.length; i++) {
+        random -= weights[i];
+        if (random <= 0) {
+          index = i;
+          break;
+        }
+      }
+
+      result.push(pool[index]);
+      pool.splice(index, 1);
+    }
+
+    return result;
+  }
+
   getWordData(word: string): WordData | undefined { return this.wordMap.get(word); }
   getImageUrl(word: string): string { return this.wordMap.get(word)?.imageUrl || ""; }
   getImageKey(word: string): string { return `word_img_${word}`; }

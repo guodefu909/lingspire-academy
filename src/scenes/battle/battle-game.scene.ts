@@ -15,8 +15,11 @@ export class BattleGameScene extends Phaser.Scene {
   private pauseButton!: Phaser.GameObjects.Text;
   private discardButton!: Phaser.GameObjects.Text;
   private fullscreenButton!: Phaser.GameObjects.Text;
+  private helpButton!: Phaser.GameObjects.Text;
   private tooltip!: Phaser.GameObjects.Text;
+  private helpModal!: Phaser.GameObjects.Container;
   private isPaused: boolean = false;
+  private isHelpOpen: boolean = false;
   private crystalHealth: number = 20;
 
   constructor() { super({ key: "BattleGameScene" }); }
@@ -31,6 +34,7 @@ export class BattleGameScene extends Phaser.Scene {
     this.initBattleManager();
     this.setupInput();
     this.battleManager.startGame();
+    this.autoShowHelpIfFirstTime();
   }
 
   /** 绘制地图背景图片（已缩放到 768×768，居中显示） */
@@ -64,12 +68,24 @@ export class BattleGameScene extends Phaser.Scene {
     this.tooltip.setVisible(false);
     this.tooltip.setDepth(100);
 
-    // 右侧按钮群 —— 地图右边空白区居中（地图 768px → 右留白 128px → 中心 960px）
+    // 右侧按钮群 —— 地图右边空白区居中，按钮组上下居中
     const rightX = BATTLE_CANVAS_WIDTH - 64;
+    const centerY = BATTLE_CANVAS_HEIGHT / 2;
+    const buttonGap = 50;
+
+    // 玩法按钮
+    this.helpButton = this.add
+      .text(rightX, centerY - buttonGap * 1.5, "玩法", {
+        fontSize: "16px", color: "#ffffff", fontFamily: "Arial",
+        backgroundColor: "#9b59b6", padding: { x: 8, y: 4 },
+      })
+      .setOrigin(1, 0.5);
+    this.helpButton.setInteractive({ useHandCursor: true });
+    this.helpButton.on("pointerdown", () => this.toggleHelp());
 
     // 全屏按钮
     this.fullscreenButton = this.add
-      .text(rightX, 30, "全屏", {
+      .text(rightX, centerY - buttonGap * 0.5, "全屏", {
         fontSize: "16px", color: "#ffffff", fontFamily: "Arial",
         backgroundColor: "#3498db", padding: { x: 8, y: 4 },
       })
@@ -79,7 +95,7 @@ export class BattleGameScene extends Phaser.Scene {
 
     // 暂停按钮
     this.pauseButton = this.add
-      .text(rightX, 80, "暂停", {
+      .text(rightX, centerY + buttonGap * 0.5, "暂停", {
         fontSize: "16px", color: "#ffffff", fontFamily: "Arial",
         backgroundColor: "#e74c3c", padding: { x: 8, y: 4 },
       })
@@ -89,7 +105,7 @@ export class BattleGameScene extends Phaser.Scene {
 
     // 换弹按钮
     this.discardButton = this.add
-      .text(rightX, 130, "换弹", {
+      .text(rightX, centerY + buttonGap * 1.5, "换弹", {
         fontSize: "16px", color: "#ffffff", fontFamily: "Arial",
         backgroundColor: "#f39c12", padding: { x: 8, y: 4 },
       })
@@ -106,6 +122,80 @@ export class BattleGameScene extends Phaser.Scene {
       this.tooltip.setVisible(true);
     });
     this.discardButton.on("pointerout", () => { this.tooltip.setVisible(false); });
+
+    this.createHelpModal();
+  }
+
+  /** 创建玩法说明弹窗（默认隐藏） */
+  private createHelpModal(): void {
+    const width = 720;
+    const height = 460;
+    const cx = BATTLE_CANVAS_WIDTH / 2;
+    const cy = BATTLE_CANVAS_HEIGHT / 2;
+
+    this.helpModal = this.add.container(cx, cy);
+
+    // 半透明遮罩 + 弹窗背景
+    const overlay = this.add.rectangle(0, 0, BATTLE_CANVAS_WIDTH, BATTLE_CANVAS_HEIGHT, 0x000000, 0.6);
+    const panel = this.add.rectangle(0, 0, width, height, 0x2c3e50, 1);
+    panel.setStrokeStyle(2, 0xffd700, 1);
+
+    const title = this.add
+      .text(0, -height / 2 + 45, "游戏玩法", {
+        fontSize: "28px", color: "#ffd700", fontFamily: "Arial", fontStyle: "bold",
+      })
+      .setOrigin(0.5);
+
+    const lines = [
+      "1. 敌军和己方士兵从双方水晶出发，胸前带有单词图片。",
+      "2. 点击敌方士兵即可发射炮弹，单词图片匹配即可消灭。",
+      "3. 点错会让该士兵血条增加，其抵达己方水晶时造成更多伤害。",
+      "4. 士兵血量越高，抵达时扣己方水晶血越多，己方血条归零则失败。",
+      "5. 在时限内击毁敌方水晶即获胜，答错单词会记入复习列表。",
+    ];
+    const content = this.add
+      .text(0, -height / 2 + 90, lines.join("\n"), {
+        fontSize: "18px", color: "#ffffff", fontFamily: "Arial",
+        lineSpacing: 14, wordWrap: { width: width - 120 },
+      })
+      .setOrigin(0.5, 0);
+
+    // 关闭按钮
+    const closeBtn = this.add
+      .text(0, height / 2 - 45, "我知道了", {
+        fontSize: "20px", color: "#ffffff", fontFamily: "Arial",
+        backgroundColor: "#3498db", padding: { x: 24, y: 10 },
+      })
+      .setOrigin(0.5);
+    closeBtn.setInteractive({ useHandCursor: true });
+    closeBtn.on("pointerdown", () => this.toggleHelp());
+
+    this.helpModal.add([overlay, panel, title, content, closeBtn]);
+    this.helpModal.setDepth(200);
+    this.helpModal.setVisible(false);
+  }
+
+  /** 打开/关闭玩法说明弹窗（打开时暂停游戏，并记录已查看状态） */
+  private toggleHelp(): void {
+    this.isHelpOpen = !this.isHelpOpen;
+    this.helpModal.setVisible(this.isHelpOpen);
+
+    if (this.isHelpOpen) {
+      this.battleManager.pauseGame();
+      try { localStorage.setItem("battle_help_seen", "1"); } catch (e) {}
+    } else if (!this.isPaused) {
+      this.battleManager.resumeGame();
+    }
+  }
+
+  /** 首次进入游戏时自动弹出玩法说明（后续仅手动点击） */
+  private autoShowHelpIfFirstTime(): void {
+    try {
+      if (localStorage.getItem("battle_help_seen")) return;
+    } catch (e) {
+      return;
+    }
+    this.toggleHelp();
   }
 
   private initBattleManager(): void {

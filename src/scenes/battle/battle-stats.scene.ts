@@ -12,7 +12,25 @@ export class BattleStatsScene extends Phaser.Scene {
   private statsManager = new WordStatsManager();
   private scrollContainer!: Phaser.GameObjects.Container;
   private scrollY: number = 0;
+  private maxScroll: number = 0;
   private contentHeight: number = 0;
+
+  /** 列表可视区域（顶部标题之下 → 返回按钮之上） */
+  private viewportTop: number = 90;
+  private viewportBottom: number = BATTLE_CANVAS_HEIGHT - 110;
+  private get visibleHeight(): number { return this.viewportBottom - this.viewportTop; }
+
+  /** 触摸/鼠标拖动状态 */
+  private isDragging: boolean = false;
+  private dragStartY: number = 0;
+  private dragStartScrollY: number = 0;
+
+  /** 滚动条 */
+  private scrollbarTrack!: Phaser.GameObjects.Rectangle;
+  private scrollbarThumb!: Phaser.GameObjects.Rectangle;
+  private thumbWidth: number = 10;
+  private thumbTop: number = 0;
+  private thumbHeight: number = 0;
 
   constructor() { super({ key: "BattleStatsScene" }); }
 
@@ -62,6 +80,14 @@ export class BattleStatsScene extends Phaser.Scene {
 
     this.scrollContainer = this.add.container(0, 0);
 
+    // 裁剪列表到可视区域，避免内容溢出到标题/返回按钮之上
+    const maskShape = this.make.graphics({ x: 0, y: 0 });
+    maskShape.fillStyle(0xffffff, 1);
+    maskShape.fillRect(0, this.viewportTop, BATTLE_CANVAS_WIDTH, this.visibleHeight);
+    this.scrollContainer.setMask(
+      maskShape.createGeometryMask(),
+    );
+
     const startY = 100;
     const lineHeight = 40;
     this.contentHeight = sortedStats.length * lineHeight;
@@ -106,32 +132,86 @@ export class BattleStatsScene extends Phaser.Scene {
     return [];
   }
 
-  /** 支持鼠标拖动和滚轮滚动浏览长列表 */
+  /**
+   * 滚动：支持鼠标滚轮 + 触摸/鼠标拖动 + 滚动条拖拽。
+   * 触摸屏不再依赖 velocity，改用 pointer 位移增量，
+   * 避免触摸事件 velocity 为 0 导致无法滚动的问题。
+   */
   private setupScrolling(): void {
-    if (this.contentHeight <= BATTLE_CANVAS_HEIGHT - 150) return;
+    this.maxScroll = Math.max(0, this.contentHeight - this.visibleHeight);
+    if (this.maxScroll <= 0) return;
+
+    this.createScrollbar();
+
+    this.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      this.dragStartY = pointer.y;
+      this.dragStartScrollY = this.scrollY;
+      this.isDragging = true;
+    });
 
     this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
-      if (pointer.isDown && pointer.y < BATTLE_CANVAS_HEIGHT - 100) {
-        this.scrollY = Phaser.Math.Clamp(
-          this.scrollY + pointer.velocity.y * 0.05,
-          -(this.contentHeight - BATTLE_CANVAS_HEIGHT + 200), 0,
-        );
-        this.scrollContainer.setPosition(0, this.scrollY);
-      }
+      if (!this.isDragging) return;
+      const delta = pointer.y - this.dragStartY;
+      this.setScrollY(this.dragStartScrollY + delta);
     });
 
+    this.input.on("pointerup", () => { this.isDragging = false; });
+    this.input.on("pointerupoutside", () => { this.isDragging = false; });
+
     this.input.on("wheel", (
-      pointer: Phaser.Input.Pointer,
-      gameObjects: Phaser.GameObjects.GameObject[],
-      deltaX: number,
-      deltaY: number,
+      _pointer: Phaser.Input.Pointer,
+      _objects: Phaser.GameObjects.GameObject[],
+      _dx: number,
+      dy: number,
     ) => {
-      this.scrollY = Phaser.Math.Clamp(
-        this.scrollY - deltaY * 0.5,
-        -(this.contentHeight - BATTLE_CANVAS_HEIGHT + 200), 0,
-      );
-      this.scrollContainer.setPosition(0, this.scrollY);
+      this.setScrollY(this.scrollY - dy);
     });
+
+    // 滚动条拖拽：拖到哪，列表滚到哪
+    this.scrollbarThumb.setInteractive({ useHandCursor: true, draggable: true });
+    this.scrollbarThumb.on("drag", (
+      _pointer: Phaser.Input.Pointer,
+      dragX: number,
+      dragY: number,
+    ) => {
+      const trackY = this.scrollbarTrack.y - this.scrollbarTrack.displayHeight / 2;
+      const ratio = Phaser.Math.Clamp(
+        (dragY - trackY - this.thumbHeight / 2) / this.scrollbarTrack.displayHeight,
+        0, 1,
+      );
+      this.setScrollY(-ratio * this.maxScroll);
+    });
+  }
+
+  /** 创建滚动条轨道与滑块 */
+  private createScrollbar(): void {
+    const trackX = BATTLE_CANVAS_WIDTH - 24;
+    const trackHeight = this.visibleHeight;
+
+    this.scrollbarTrack = this.add
+      .rectangle(trackX, this.viewportTop + trackHeight / 2, 6, trackHeight, 0x000000, 0.25)
+      .setOrigin(0.5, 0);
+
+    this.thumbHeight = Math.max(
+      30, trackHeight * (this.visibleHeight / this.contentHeight),
+    );
+    this.thumbTop = this.viewportTop;
+
+    this.scrollbarThumb = this.add
+      .rectangle(trackX, this.thumbTop + this.thumbHeight / 2, this.thumbWidth, this.thumbHeight, 0x95a5a6, 1)
+      .setOrigin(0.5, 0);
+  }
+
+  /** 更新滚动位置并同步滑块 */
+  private setScrollY(y: number): void {
+    this.scrollY = Phaser.Math.Clamp(y, -this.maxScroll, 0);
+    this.scrollContainer.setPosition(0, this.scrollY);
+
+    if (!this.scrollbarThumb) return;
+    const ratio = -this.scrollY / this.maxScroll;
+    const trackHeight = this.scrollbarTrack.displayHeight;
+    this.thumbTop = this.viewportTop + ratio * (trackHeight - this.thumbHeight);
+    this.scrollbarThumb.setY(this.thumbTop + this.thumbHeight / 2);
   }
 
   private createBackButton(): void {
