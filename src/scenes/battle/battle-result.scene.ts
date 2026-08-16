@@ -116,10 +116,18 @@ export class BattleResultScene extends Phaser.Scene {
       const word = wrongWords[i];
       const y = startY + i * lineHeight;
       const imgKey = `word_img_${word.word}`;
+      const imgX = BATTLE_CANVAS_WIDTH / 2 - 100;
+
+      // 白色圆形背景（与炮弹一致）
+      const circle = this.add.graphics();
+      circle.fillStyle(0xffffff, 1);
+      circle.fillCircle(imgX, y, 17);
+      circle.lineStyle(2, 0xcccccc, 0.8);
+      circle.strokeCircle(imgX, y, 17);
 
       if (this.textures.exists(imgKey)) {
         this.add
-          .image(BATTLE_CANVAS_WIDTH / 2 - 100, y, imgKey)
+          .image(imgX, y, imgKey)
           .setDisplaySize(30, 30)
           .setOrigin(0.5);
       }

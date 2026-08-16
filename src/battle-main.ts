@@ -4,6 +4,7 @@ import { BattleMenuScene } from "./scenes/battle/battle-menu.scene";
 import { BattleGameScene } from "./scenes/battle/battle-game.scene";
 import { BattleResultScene } from "./scenes/battle/battle-result.scene";
 import { BattleStatsScene } from "./scenes/battle/battle-stats.scene";
+import { BattlePreviewScene } from "./scenes/battle/battle-preview.scene";
 import {
   BATTLE_CANVAS_WIDTH,
   BATTLE_CANVAS_HEIGHT,
@@ -29,6 +30,7 @@ export class BattleGameManager {
         BattleGameScene,
         BattleResultScene,
         BattleStatsScene,
+        BattlePreviewScene,
       ],
       scale: {
         mode: Phaser.Scale.FIT,

@@ -79,15 +79,20 @@ export class BattleMenuScene extends Phaser.Scene {
 
   private createButtons(): void {
     const buttons = [
-      { text: "开始游戏", y: 300, callback: () => this.startGame() },
+      { text: "开始游戏", y: 280, callback: () => this.startGame() },
+      {
+        text: "单词预习",
+        y: 340,
+        callback: () => this.scene.start("BattlePreviewScene"),
+      },
       {
         text: "正确率统计",
-        y: 360,
+        y: 400,
         callback: () => this.scene.start("BattleStatsScene"),
       },
       {
         text: "返回主页面",
-        y: 420,
+        y: 460,
         callback: () => {
           window.location.href = "./";
         },

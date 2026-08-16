@@ -82,7 +82,7 @@ export class BattleTurret extends Phaser.GameObjects.Container {
 
   /**
    * 更新炮塔界面：
-   * 敌方：仅显示队首炮弹。
+   * 敌方：不显示炮弹。
    * 我方：显示队首前 3 个炮弹——第 1 个（100%）、第 2 个在上方（75%）、第 3 个最上方（50%）。
    * 点击队首炮弹可翻转查看中文释义。
    */
@@ -95,7 +95,7 @@ export class BattleTurret extends Phaser.GameObjects.Container {
     if (this.isPlayer) {
       this.updatePlayerDisplay();
     } else {
-      this.updateEnemyDisplay();
+      return;
     }
 
     // 炮弹数量标签
@@ -109,14 +109,6 @@ export class BattleTurret extends Phaser.GameObjects.Container {
       })
       .setOrigin(0.5);
     this.bulletContainer.add(countText);
-  }
-
-  /** 敌方炮塔：仅显示队首炮弹（原样式位置） */
-  private updateEnemyDisplay(): void {
-    const bullet = this.bullets[0];
-    this.displayBullet = this.createBulletDisplay(bullet, 0, 1, false);
-    this.bulletContainer.add(this.displayBullet);
-    this.makeFrontInteractive();
   }
 
   /**
