@@ -105,9 +105,14 @@ export class BattleCrystal extends Phaser.GameObjects.Container {
   getHealth(): number { return this.health; }
   isDead(): boolean { return this.health <= 0; }
 
-  addBullet(wordData: WordData): void { this.turret.addBullet(wordData); }
+  addBullet(wordData: WordData, batch: number = -1): void {
+    this.turret.addBullet(wordData, batch);
+  }
   getFrontBullet(): BattleBullet | null { return this.turret.getFrontBullet(); }
   removeFrontBullet(): void { this.turret.removeFrontBullet(); }
+  removeBulletByWord(word: string, batch: number): boolean {
+    return this.turret.removeBulletByWord(word, batch);
+  }
   getTurret(): BattleTurret { return this.turret; }
   getIsPlayer(): boolean { return this.isPlayer; }
 }

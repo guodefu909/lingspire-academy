@@ -45,7 +45,7 @@ export class CombatSystem {
   /** 结算伤害：匹配正确扣血，错误回血 */
   applyDamage(soldier: BattleSoldier, isMatch: boolean): void {
     if (isMatch) {
-      soldier.takeDamage();
+      soldier.takeDamage(1, "bullet");
     } else {
       soldier.heal();
     }

@@ -22,5 +22,5 @@ export const DEFAULT_BATTLE_CONFIG: BattleConfig = {
   word: { imageBaseUrl: "words/" },
   bullet: { speed: 300, maxDisplayCount: 10, maxCapacity: 100 },
   game: { duration: 5 * 60 * 1000 },
-  ai: { errorRate: 0.05 },
+  ai: { errorRate: 0.15 },
 };

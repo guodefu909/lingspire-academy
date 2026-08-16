@@ -28,6 +28,8 @@ export class SoldierSpawnSystem {
   private pathManager: PathManager;
   private scene: Phaser.Scene;
   private soldierSpeed: number;
+  /** 出兵批次计数（每次出兵 +1） */
+  private batchCounter: number = 0;
 
   constructor(
     scene: Phaser.Scene,
@@ -70,23 +72,25 @@ export class SoldierSpawnSystem {
   /**
    * 执行一波出兵：三路（上中下）各生成一个单词，
    * 玩家方和敌方共用同一单词（双方需要打同一个词），
-   * 路径顺序和水晶顺序随机打乱以增加变化。
+   * 相同路双方单词一致（上对上、中对中、下对下），
+   * 同一批次双方共享相同 batch 编号。
    */
   private spawnSoldiers(crystals: BattleCrystal[]): void {
     const paths = [PathType.TOP, PathType.MIDDLE, PathType.BOTTOM];
-    const shuffledPaths = this.shuffleArray([...paths]);
 
-    // 为每条路分配互不相同的随机单词（玩家和敌方共用）
+    // 为每条路分配互不相同的随机单词（玩家和敌方共用，固定按路上/中/下映射）
     const distinctWords = this.wordLibrary.getRandomWords(paths.length);
     const pathWords: Map<PathType, any> = new Map();
-    shuffledPaths.forEach((pathType, i) => {
+    paths.forEach((pathType, i) => {
       pathWords.set(pathType, distinctWords[i]);
     });
 
-    // 随机化水晶处理顺序
-    const shuffledCrystals = this.shuffleArray([...crystals]);
+    // 同一批次所有士兵共享同一 batch 编号
+    this.batchCounter++;
 
-    shuffledCrystals.forEach((crystal) => {
+    crystals.forEach((crystal) => {
+      // 每个水晶的三路出兵顺序随机打乱，使该批次对应三枚炮弹乱序追加到队尾
+      const shuffledPaths = this.shuffleArray([...paths]);
       shuffledPaths.forEach((pathType) => {
         const wordData = pathWords.get(pathType);
 
@@ -99,6 +103,7 @@ export class SoldierSpawnSystem {
           undefined,
           this.soldierSpeed,
           crystal.getIsPlayer(),
+          this.batchCounter,
         );
 
         this.scene.events.emit("soldier-spawned", {

@@ -26,6 +26,8 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
   private healthBar: Phaser.GameObjects.Graphics;
   /** 是否属于玩家一方 */
   private isPlayerOwned: boolean;
+  /** 出兵批次（同批次同路双方士兵对应相遇） */
+  private batch: number;
   /** 是否已开始移动（用于延迟碰撞检测） */
   private hasStartedMoving: boolean = false;
   /** 淡入进度计时器 */
@@ -56,6 +58,7 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
     maxHealth: number = 5,
     speed: number = 60,
     isPlayerOwned: boolean = true,
+    batch: number = 0,
   ) {
     super(scene, 0, 0);
 
@@ -65,6 +68,7 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
     this.pathManager = pathManager;
     this.maxHealth = maxHealth;
     this.health = 1;
+    this.batch = batch;
 
     // 中路路径更短，调低速度使各路到达时间一致
     if (pathType === PathType.MIDDLE) {
@@ -271,11 +275,11 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
     return this.isPlayerOwned ? this.pathProgress >= 1 : this.pathProgress <= 0;
   }
 
-  /** 受到 1 点伤害 */
-  takeDamage(): void {
-    this.health = Math.max(0, this.health - 1);
+  /** 受到指定点数的伤害（cause: bullet=炮弹命中，collision=相遇碰撞） */
+  takeDamage(amount: number = 1, cause: string = "bullet"): void {
+    this.health = Math.max(0, this.health - amount);
     this.updateHealthBar();
-    if (this.health <= 0) this.onDeath();
+    if (this.health <= 0) this.onDeath(cause);
   }
 
   /** 恢复 1 点血量（上限 maxHealth） */
@@ -287,8 +291,8 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
   }
 
   /** 死亡时发出事件通知外部清理 */
-  private onDeath(): void {
-    this.scene.events.emit("soldier-died", this);
+  private onDeath(cause: string): void {
+    this.scene.events.emit("soldier-died", this, cause);
     this.destroy();
   }
 
@@ -297,6 +301,8 @@ export class BattleSoldier extends Phaser.GameObjects.Container {
   getImageUrl(): string { return this.imageUrl; }
   getPathProgress(): number { return this.pathProgress; }
   getIsPlayerOwned(): boolean { return this.isPlayerOwned; }
+  getPathType(): PathType { return this.pathType; }
+  getBatch(): number { return this.batch; }
   lock(): void { this.locked = true; }
   isLocked(): boolean { return this.locked; }
 }

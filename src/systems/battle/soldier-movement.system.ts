@@ -22,6 +22,42 @@ export class SoldierMovementSystem {
   }
 
   /**
+   * 检测双方士兵相遇：同路、同批次、同单词的士兵交叉相遇时触发碰撞。
+   * 规则同士兵撞击水晶：血量低的死亡，血量高的扣除血量低的等量血量。
+   * @param playerSoldiers 玩家士兵列表
+   * @param enemySoldiers 敌方士兵列表
+   */
+  resolveMeetings(
+    playerSoldiers: BattleSoldier[],
+    enemySoldiers: BattleSoldier[],
+  ): void {
+    const pairs: Array<[BattleSoldier, BattleSoldier]> = [];
+
+    for (const player of playerSoldiers) {
+      if (!player.active || player.isLocked()) continue;
+      for (const enemy of enemySoldiers) {
+        if (!enemy.active || enemy.isLocked()) continue;
+        if (player.getPathType() !== enemy.getPathType()) continue;
+        if (player.getBatch() !== enemy.getBatch()) continue;
+        if (player.getWord() !== enemy.getWord()) continue;
+        // 玩家 progress 0→1，敌方 1→0，交叉即相遇
+        if (player.getPathProgress() >= enemy.getPathProgress()) {
+          pairs.push([player, enemy]);
+          break;
+        }
+      }
+    }
+
+    for (const [player, enemy] of pairs) {
+      if (!player.active || !enemy.active) continue;
+      if (player.isLocked() || enemy.isLocked()) continue;
+      const lower = Math.min(player.getHealth(), enemy.getHealth());
+      player.takeDamage(lower, "collision");
+      enemy.takeDamage(lower, "collision");
+    }
+  }
+
+  /**
    * 每帧更新所有士兵位置，抵达终点时扣血并销毁。
    * @param soldiers 士兵数组（玩家或敌方）
    * @param ownCrystal 己方水晶（不会判定扣血）

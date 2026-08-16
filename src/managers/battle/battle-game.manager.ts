@@ -89,6 +89,8 @@ export class BattleGameManager {
           this.wrongWords.push(wordData);
         }
         this.wordLibrary.getStatsManager().recordWrong(soldier.getWord());
+        // 非炮弹死亡：移除对应炮弹
+        this.playerCrystal.removeBulletByWord(soldier.getWord(), soldier.getBatch());
       }
     });
 
@@ -155,21 +157,26 @@ export class BattleGameManager {
         soldier.setData("targetCrystal", this.enemyCrystal);
         this.playerSoldiers.push(soldier);
         // 玩家士兵出现 → 给敌方水晶添加炮弹（供玩家攻击用）
-        this.enemyCrystal.addBullet(wordData);
+        this.enemyCrystal.addBullet(wordData, soldier.getBatch());
       } else {
         soldier.setData("targetCrystal", this.playerCrystal);
         this.enemySoldiers.push(soldier);
         // 敌方士兵出现 → 给玩家水晶添加炮弹（供 AI 攻击用）
-        this.playerCrystal.addBullet(wordData);
+        this.playerCrystal.addBullet(wordData, soldier.getBatch());
       }
     });
 
-    this.scene.events.on("soldier-died", (soldier: BattleSoldier) => {
+    this.scene.events.on("soldier-died", (soldier: BattleSoldier, cause?: string) => {
       const playerIndex = this.playerSoldiers.indexOf(soldier);
       if (playerIndex > -1) this.playerSoldiers.splice(playerIndex, 1);
 
       const enemyIndex = this.enemySoldiers.indexOf(soldier);
       if (enemyIndex > -1) this.enemySoldiers.splice(enemyIndex, 1);
+
+      // 敌方士兵非炮弹击中死亡 → 从玩家炮弹列表中移除对应炮弹
+      if (!soldier.getIsPlayerOwned() && cause !== "bullet") {
+        this.playerCrystal.removeBulletByWord(soldier.getWord(), soldier.getBatch());
+      }
     });
 
     this.scene.events.on("crystal-destroyed", (isPlayer: boolean) => {
@@ -196,6 +203,11 @@ export class BattleGameManager {
     );
     this.soldierMovementSystem.update(
       this.enemySoldiers, this.enemyCrystal, this.playerCrystal, delta,
+    );
+
+    // 双方士兵相遇碰撞
+    this.soldierMovementSystem.resolveMeetings(
+      this.playerSoldiers, this.enemySoldiers,
     );
 
     this.combatSystem.update(this.flyingBullets, this.enemySoldiers, delta);

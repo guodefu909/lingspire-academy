@@ -11,6 +11,8 @@ import { BattleSoldier } from "./battle-soldier";
 export class BattleBullet extends Phaser.GameObjects.Container {
   private word: string;
   private imageUrl: string;
+  private chinese: string;
+  private batch: number;
   private target: BattleSoldier | null = null;
   private speed: number;
   private isFlying: boolean = false;
@@ -22,11 +24,15 @@ export class BattleBullet extends Phaser.GameObjects.Container {
     word: string,
     imageUrl: string,
     speed: number = 300,
+    chinese: string = "",
+    batch: number = -1,
   ) {
     super(scene, 0, 0);
 
     this.word = word;
     this.imageUrl = imageUrl;
+    this.chinese = chinese;
+    this.batch = batch;
     this.speed = speed;
 
     this.glow = scene.add.graphics();
@@ -112,5 +118,7 @@ export class BattleBullet extends Phaser.GameObjects.Container {
 
   getWord(): string { return this.word; }
   getImageUrl(): string { return this.imageUrl; }
+  getChinese(): string { return this.chinese; }
+  getBatch(): number { return this.batch; }
   getTarget(): BattleSoldier | null { return this.target; }
 }
