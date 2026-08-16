@@ -224,6 +224,11 @@ export class BattleTurret extends Phaser.GameObjects.Container {
 
     this.isFlipped = !this.isFlipped;
 
+    // 翻到中文时自动朗读单词
+    if (this.isFlipped) {
+      this.speakWord(this.bullets[0].getWord());
+    }
+
     // 水平缩放至 0 模拟翻转，中点切换内容
     this.scene.tweens.add({
       targets: display,
@@ -284,4 +289,14 @@ export class BattleTurret extends Phaser.GameObjects.Container {
 
   getBulletCount(): number { return this.bullets.length; }
   hasBullets(): boolean { return this.bullets.length > 0; }
+
+  /** 使用浏览器 TTS 朗读单词（英语，略慢速） */
+  private speakWord(word: string): void {
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(word);
+    u.lang = "en-US";
+    u.rate = 0.8;
+    window.speechSynthesis.speak(u);
+  }
 }
